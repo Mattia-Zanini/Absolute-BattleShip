@@ -1,0 +1,13 @@
+.sfondo {
+  background-color: #131c22;
+}
+.sidebar {
+  width: 280px;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  background-color: #1a262e;
+}
+#app {
+  margin-left: 280px;
+}
