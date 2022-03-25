@@ -5,19 +5,63 @@
   width: 15%;
   position: absolute;
   top: 0;
+  left: 0;
   bottom: 0;
   background-color: #1a262e;
 }
 hr {
   width: 13vw;
 }
-.theme-section-btn {
-  margin-top: 280%;
-}
 .theme-btn {
   width: 100%;
   height: 2vw;
 }
+/* THEME SWITCH */
+.theme-toggle {
+  --size: 2rem;
+
+  background: none;
+  border: none;
+  padding: 0;
+
+  inline-size: var(--size);
+  block-size: var(--size);
+  aspect-ratio: 1;
+  border-radius: 50%;
+
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  outline-offset: 5px;
+  @media (hover: none) {
+    --size: 48px;
+  }
+}
+.theme-btn > svg {
+  inline-size: 100%;
+  block-size: 100%;
+  stroke-linecap: round;
+}
+
+.sun-and-moon > :is(.moon, .sun, .sun-beams) {
+  transform-origin: center center;
+}
+
+.sun-and-moon > :is(.moon, .sun) {
+  fill: var(--icon-fill);
+}
+.theme-toggle:is(:hover, :focus-visible) > .sun-and-moon > :is {
+  fill: var(--icon-fill-hover);
+}
+
+.sun-and-moon > .sun-beams {
+  stroke: var(--icon-fill);
+  stroke-width: 2px;
+}
+.theme-toggle:is(:hover, :focus-visible) .sun-and-moon > .sun-beams {
+  stroke: var(--icon-fill-hover);
+}
+
 #app {
   margin-left: 15%;
 }
