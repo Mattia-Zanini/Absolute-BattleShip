@@ -1,2 +1,15 @@
 https://www.youtube.com/watch?v=U2iZj_txFSc
-34:53
+50:49
+
+
+v-bind:[]			abbreviazione, :
+v-on:[]			abbreviazione, @
+@disabled="variabile"	disabilità delle proprietà
+template			mettere della logica nell'html che non viene renderizzata (non vedi nell'ispezione che tag bengono usati)
+v-if="condizione"		ramificazione classica di ogni linguaggio
+v-else			"
+@mousemove="metodo"	evento del movimento del mouse su delle "sezioni"
+@mousemove.stop.prevent	ferma l'evento
+@keyup="metodo"		input di un tasto generico
+@keyup.tasto		input di un tasto specifico
+computed			variabili a cui tu puoi accedere dal template html e che puoi utilizzare nel momento in cui cambiano altre variabili nella tua app (variabili reattive)
