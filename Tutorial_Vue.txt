@@ -13,3 +13,5 @@ v-else			"
 @keyup="metodo"		input di un tasto generico
 @keyup.tasto		input di un tasto specifico
 computed			variabili a cui tu puoi accedere dal template html e che puoi utilizzare nel momento in cui cambiano altre variabili nella tua app (variabili reattive)
+watch				ci permette di andare ad osservare delle variabili
+v-model="variabile"	modifica in due direzioni, la variabile e l'input		

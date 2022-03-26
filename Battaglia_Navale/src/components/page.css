@@ -1,0 +1,12 @@
+.sfondo {
+  background-color: #131c22;
+}
+* {
+  color: white;
+}
+.title {
+  text-align: center;
+}
+.title-h1 {
+  font-size: 4vw;
+}

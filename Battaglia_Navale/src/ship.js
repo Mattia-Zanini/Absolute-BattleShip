@@ -3,13 +3,10 @@ export class Ship {
     this.name = _name;
     this.year = _year;
   }
-  return(x) {
-    return x;
-  }
 }
-export class Barca {
+/*export class Barca {
   constructor(_name, _year) {
     this.name = _name;
     this.year = _year;
   }
-}
+}*/
