@@ -1,0 +1,14 @@
+.sfondo {
+  background-color: #131c22;
+}
+* {
+  color: white;
+}
+.title-h1 {
+  font-size: 5vw;
+  text-align: center;
+}
+.detail-game {
+  margin: 2% 0 0 2% !important;
+  text-align: justify;
+}
