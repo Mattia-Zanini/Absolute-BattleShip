@@ -1,30 +1,34 @@
-export class Ship {
-  id;
-  name;
-  Length;
-  isVertical;
-  isSelected;
-  constructor(_id, _name, _Length) {
-    this.id = _id;
-    this.name = _name;
-    this.Length = _Length;
+import { Player } from "./GameComponents.js";
+export function Game() {
+  const giocatore = new Player("Giocatore");
+  const bot = new Player("BOT");
+  //create 10 ships for each player
+  for (let i = 0; i < 10; i++) {
+    let shipName = "";
+    let size = 0;
+    if (i == 0) {
+      shipName = "Aircraft Carrier";
+      size = 5;
+    }
+    if (i == 1) {
+      shipName = "Battleship";
+      size = 4;
+    }
+    if (i == 2) {
+      shipName = "Submarine";
+      size = 3;
+    }
+    if (i > 2 && i < 6) {
+      shipName = "Cruiser";
+      size = 2;
+    }
+    if (i > 5 && i < 10) {
+      shipName = "Destroyer";
+      size = 1;
+    }
+    giocatore.newShip(i, shipName, size);
+    bot.newShip(i, shipName, size);
   }
-}
-export class Player {
-  name;
-  ships;
-  constructor(_name) {
-    this.name = _name;
-    this.ships = [];
-  }
-  newShip(_id, _name, _Length) {
-    this.ships.push(new Ship(_id, _name, _Length));
-    return this.ships[this.ships.length - 1];
-  }
-  get allShips() {
-    return this.ships;
-  }
-  get numberOfShips() {
-    return this.ships.length;
-  }
+  console.log(giocatore);
+  console.log(bot);
 }
