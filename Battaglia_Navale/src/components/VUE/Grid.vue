@@ -1,11 +1,11 @@
 <template>
-    <table class="grid">
-        <tbody>
-            <tr v-for="row in 11" :class="{ 'no-border': (row == 1) }">
-                <td v-for="col in 11" :class="{ 'no-border': (col == 1) }"></td>
-            </tr>
-        </tbody>
-    </table>
+  <table class="grid">
+    <tbody>
+      <tr v-for="row in 11" :class="{ 'grid-border': row != 1 }">
+        <td v-for="col in 11" :class="{ 'grid-border': col != 1 }"></td>
+      </tr>
+    </tbody>
+  </table>
 </template>
 <!--
 <tbody>

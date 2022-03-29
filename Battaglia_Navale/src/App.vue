@@ -29,8 +29,8 @@ export default {
   data() {
     return {
       row: 0,
-      col: 0
-    }
+      col: 0,
+    };
   },
   /*
     // Methods are functions that mutate state and trigger updates.
@@ -49,6 +49,6 @@ export default {
   },
   components: {
     DetailGame,
-  }
+  },
 };
 </script>
