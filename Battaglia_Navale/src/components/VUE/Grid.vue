@@ -1,12 +1,40 @@
 <template>
   <table class="grid">
     <tbody>
-      <tr v-for="row in 11" :class="{ 'grid-border': row != 1 }">
-        <td v-for="col in 11" :class="{ 'grid-border': col != 1 }"></td>
+      <tr v-for="row in 11">
+        <td
+          v-for="col in 11"
+          :class="[{ 'no-border': row == 1 || col == 1 }, { 'grid-border': row != 1 && col != 1 }]"
+        >
+          <div class="indicator" v-if="col == 1 && row != 1">{{ rowIndicators[row - 2] }}</div>
+          <div class="indicator" v-if="col != 1 && row == 1">{{ col - 1 }}</div>
+        </td>
       </tr>
     </tbody>
   </table>
 </template>
+
+<script>
+export default {
+  data() {
+    return {
+      rowIndicators: [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H",
+        "I",
+        "J",
+      ],
+    };
+  },
+};
+</script>
+
 <!--
 <tbody>
     <tr v-for="row in grid">

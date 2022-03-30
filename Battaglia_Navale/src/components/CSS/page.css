@@ -1,4 +1,8 @@
-.sfondo {
+@font-face {
+  font-family: odGmText;
+  src: url(../../assets/fonts/odGmText.TTF);
+}
+.backgroundGame {
   background-color: #131c22;
 }
 * {
@@ -7,14 +11,15 @@
 .title-h1 {
   font-size: 5vw;
   text-align: center;
-  margin-bottom: 2%;
+  margin-bottom: 4%;
 }
 .detail-game {
   margin: 2% 0 0 2% !important;
   text-align: justify;
+  font-family: odGmText;
 }
-.no-border {
-  border-color: transparent !important;
+.detail-game > h4 {
+  font-size: 1.5vw !important;
 }
 table.grid {
   margin: 2% 0 0 !important;
@@ -23,4 +28,33 @@ table.grid {
 }
 .grid-border {
   border: 1px solid !important;
+}
+.no-border {
+  border: none !important;
+}
+.indicator {
+  width: 1px;
+  font-size: 1vw;
+  font-weight: bold;
+  margin-left: 1vw;
+}
+.start {
+  font-family: odGmText;
+  font-size: 4vw !important;
+  background-color: #a76d16 !important;
+  border: 0.6vw solid #6b5535 !important;
+  width: 60%;
+  height: 30%;
+  margin: 20% 0 0 30% !important;
+  border-radius: 2vw !important;
+}
+.start:focus {
+  box-shadow: none !important;
+}
+.start:hover {
+  background-color: #8d601d !important;
+}
+.start:active {
+  background-color: #704a11 !important;
+  color: white !important;
 }

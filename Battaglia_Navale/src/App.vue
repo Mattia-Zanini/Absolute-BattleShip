@@ -13,8 +13,8 @@ Game();
       <div class="col-5 detail-game">
         <DetailGame />
       </div>
-      <div class="col-6 d-flex justify-content-end">
-        <Grid />
+      <div class="col-6 d-flex justify-content-center">
+        <button class="btn start" @click="startGame">Gioca</button>
       </div>
     </div>
   </div>
