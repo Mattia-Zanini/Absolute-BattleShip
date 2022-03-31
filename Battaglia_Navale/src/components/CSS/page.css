@@ -59,3 +59,10 @@ table.grid {
   background-color: #704a11 !important;
   color: white !important;
 }
+.zoomin{
+  animation-name: zoomin;
+  animation-duration: 0.3s;
+  animation-iteration-count: 1;
+  animation-direction: normal;
+  animation-fill-mode: forwards;
+}

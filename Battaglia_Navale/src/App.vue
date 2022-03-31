@@ -18,7 +18,10 @@ Game();
       </div>
     </div>
     <div class="row" v-else>
-      <div class="col-12 d-flex justify-content-center">
+      <div class="col-12 d-flex justify-content-center zoomin">
+        <button class="btn start" @click="showMenu">Gioca</button>
+      </div>
+      <div class="col-12 d-flex justify-content-center zoomin">
         <button class="btn start" @click="showMenu">Gioca</button>
       </div>
     </div>
