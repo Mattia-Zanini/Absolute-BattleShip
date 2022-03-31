@@ -1,7 +1,6 @@
 <script setup>
 import { Game } from "./components/JS/Game.js";
 Game();
-const show = false;
 </script>
 
 <template>
@@ -10,14 +9,18 @@ const show = false;
     <div class="row">
       <h1 class="title-h1">Battleship</h1>
     </div>
-    <div class="row">
+    <div class="row" v-if="!show">
       <div class="col-5 detail-game">
         <DetailGame />
       </div>
       <div class="col-6 d-flex justify-content-center">
-        <button class="btn start" @click="show = !show">Gioca</button>
+        <button class="btn start" @click="showMenu">Gioca</button>
       </div>
-      <GameMenu />
+    </div>
+    <div class="row" v-else>
+      <div class="col-12 d-flex justify-content-center">
+        <button class="btn start" @click="showMenu">Gioca</button>
+      </div>
     </div>
   </div>
 </template>
@@ -33,16 +36,17 @@ export default {
     return {
       row: 0,
       col: 0,
+      show: false,
     };
   },
-  /*
-    // Methods are functions that mutate state and trigger updates.
-    // They can be bound as event listeners in templates.
-    methods: {
-      increment() {
-        this.count++
-      }
-    },*/
+  // Methods are functions that mutate state and trigger updates.
+  // They can be bound as event listeners in templates.
+  methods: {
+    showMenu() {
+      this.show = !this.show;
+      console.log(this.show);
+    },
+  },
 
   // Lifecycle hooks are called at different stages
   // of a component's lifecycle.
