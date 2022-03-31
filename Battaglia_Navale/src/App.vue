@@ -1,6 +1,7 @@
 <script setup>
 import { Game } from "./components/JS/Game.js";
 Game();
+const show = false;
 </script>
 
 <template>
@@ -14,8 +15,9 @@ Game();
         <DetailGame />
       </div>
       <div class="col-6 d-flex justify-content-center">
-        <button class="btn start" @click="startGame">Gioca</button>
+        <button class="btn start" @click="show = !show">Gioca</button>
       </div>
+      <GameMenu />
     </div>
   </div>
 </template>
@@ -23,6 +25,7 @@ Game();
 <script>
 import DetailGame from "./components/VUE/DetailGame.vue";
 import Grid from "./components/VUE/Grid.vue";
+import GameMenu from "./components/VUE/GameMenu.vue";
 export default {
   // Properties returned from data() becomes reactive state
   // and will be exposed on `this`.
