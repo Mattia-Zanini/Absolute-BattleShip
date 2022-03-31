@@ -59,10 +59,13 @@ table.grid {
   background-color: #704a11 !important;
   color: white !important;
 }
-.zoomin{
+.game-menu{
   animation-name: zoomin;
   animation-duration: 0.3s;
   animation-iteration-count: 1;
   animation-direction: normal;
   animation-fill-mode: forwards;
+  width: 90% !important;
+  height: 20vw;
+  background-color: #383b3d;
 }

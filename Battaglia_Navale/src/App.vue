@@ -18,11 +18,17 @@ Game();
       </div>
     </div>
     <div class="row" v-else>
-      <div class="col-12 d-flex justify-content-center zoomin">
-        <button class="btn start" @click="showMenu">Gioca</button>
-      </div>
-      <div class="col-12 d-flex justify-content-center zoomin">
-        <button class="btn start" @click="showMenu">Gioca</button>
+      <div class="col-12 d-flex justify-content-center game-menu">
+        <div class="row">
+          <div class="col-12">
+            <button class="btn start" @click="showMenu">Gioca</button>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <button class="btn start" @click="showMenu">Esci</button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
