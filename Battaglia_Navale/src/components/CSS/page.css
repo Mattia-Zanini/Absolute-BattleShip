@@ -39,33 +39,35 @@ table.grid {
   font-weight: bold;
   margin-left: 1vw;
 }
-.start {
+.btn-style {
   font-family: odGmText;
   font-size: 4vw !important;
   background-color: #a76d16 !important;
   border: 0.6vw solid #6b5535 !important;
-  width: 60%;
-  height: 30%;
+  width: 70%;
+  height: 40%;
   margin: 20% 0 0 30% !important;
   border-radius: 2vw !important;
 }
-.start:focus {
+.btn-style:focus {
   box-shadow: none !important;
 }
-.start:hover {
+.btn-style:hover {
   background-color: #8d601d !important;
 }
-.start:active {
+.btn-style:active {
   background-color: #704a11 !important;
   color: white !important;
 }
-.game-menu{
+.game-menu {
   animation-name: zoomin;
   animation-duration: 0.3s;
   animation-iteration-count: 1;
   animation-direction: normal;
   animation-fill-mode: forwards;
-  width: 90% !important;
-  height: 20vw;
+  width: 95% !important;
+  height: 22vw;
   background-color: #383b3d;
+  margin: 5% 0 0 0 !important;
+  outline: 1.2vw solid #2a2b2c;
 }

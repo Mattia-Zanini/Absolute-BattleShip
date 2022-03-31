@@ -14,22 +14,11 @@ Game();
         <DetailGame />
       </div>
       <div class="col-6 d-flex justify-content-center">
-        <button class="btn start" @click="showMenu">Gioca</button>
+        <button class="btn btn-style" @click="showMenu">Nuova Partita</button>
       </div>
     </div>
-    <div class="row" v-else>
-      <div class="col-12 d-flex justify-content-center game-menu">
-        <div class="row">
-          <div class="col-12">
-            <button class="btn start" @click="showMenu">Gioca</button>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-12">
-            <button class="btn start" @click="showMenu">Esci</button>
-          </div>
-        </div>
-      </div>
+    <div class="row d-flex justify-content-center" v-else>
+      <GameMenu @hideMenu="showMenu" />
     </div>
   </div>
 </template>
