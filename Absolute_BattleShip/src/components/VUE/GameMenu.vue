@@ -1,10 +1,10 @@
 <template>
-    <div class="game-menu">
+    <div class="col-12 game-menu">
         <div class="row">
             <button class="btn btn-style">Gioca</button>
         </div>
         <div class="row">
-            <button class="btn btn-style" @click="$emit('hideMenu')">Esci</button>
+            <button class="btn btn-style" @click="$emit('hideMenu', 1)">Regole</button>
         </div>
     </div>
 </template>
@@ -14,8 +14,4 @@ export default {};
 </script>
 
 <style scoped>
-.btn-style {
-    width: 50%;
-    margin: 2% 0 0 25% !important;
-}
 </style>

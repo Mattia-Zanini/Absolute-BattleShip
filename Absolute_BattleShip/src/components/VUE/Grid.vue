@@ -9,9 +9,7 @@
             { 'grid-border': row != 1 && col != 1 },
           ]"
         >
-          <div class="indicator" v-if="col == 1 && row != 1">
-            {{ rowIndicators[row - 2] }}
-          </div>
+          <div class="indicator" v-if="col == 1 && row != 1">{{ rowIndicators[row - 2] }}</div>
           <div class="indicator" v-if="col != 1 && row == 1">{{ col - 1 }}</div>
         </td>
       </tr>

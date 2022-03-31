@@ -7,18 +7,21 @@ Game();
   <div class="container-fluid">
     <!-- APP -->
     <div class="row">
-      <h1 class="title-h1">Battleship</h1>
+      <h1 class="title-h1">Absolute Battleship</h1>
     </div>
-    <div class="row" v-if="!show">
+    <!--<div class="row" v-if="!show">
       <div class="col-5 detail-game">
         <DetailGame />
       </div>
       <div class="col-6 d-flex justify-content-center">
         <button class="btn btn-style" @click="showMenu">Nuova Partita</button>
       </div>
-    </div>
-    <div class="row d-flex justify-content-center" v-else>
+    </div>-->
+    <div v-if="show == 0" class="row d-flex justify-content-center zoomin">
       <GameMenu @hideMenu="showMenu" />
+    </div>
+    <div v-if="show == 1" class="row d-flex justify-content-center zoomin">
+      <DetailGame @hideRules="showMenu" />
     </div>
   </div>
 </template>
@@ -34,15 +37,15 @@ export default {
     return {
       row: 0,
       col: 0,
-      show: false,
+      show: 0,
     };
   },
   // Methods are functions that mutate state and trigger updates.
   // They can be bound as event listeners in templates.
   methods: {
-    showMenu() {
-      this.show = !this.show;
-      console.log(this.show);
+    showMenu(_value) {
+      this.show = _value;
+      console.log("Questo è il valore di show " + this.show);
     },
   },
 

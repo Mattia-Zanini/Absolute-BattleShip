@@ -15,7 +15,7 @@
   font-family: odGmText;
 }
 .detail-game {
-  margin: 2% 0 0 2% !important;
+  margin: 1% 0 0 0 !important;
   text-align: justify;
   font-family: odGmText;
 }
@@ -44,9 +44,9 @@ table.grid {
   font-size: 4vw !important;
   background-color: #a76d16 !important;
   border: 0.6vw solid #6b5535 !important;
-  width: 70%;
+  width: 45% !important;
   height: 40%;
-  margin: 20% 0 0 30% !important;
+  margin: 2% 0 0 28% !important;
   border-radius: 2vw !important;
 }
 .btn-style:focus {
@@ -60,14 +60,16 @@ table.grid {
   color: white !important;
 }
 .game-menu {
+  width: 95% !important;
+  height: 22vw;
+  background-color: #383b3d;
+  margin: 5% 0 0 0 !important;
+  outline: 0.7vw solid #2a2b2c;
+}
+.zoomin {
   animation-name: zoomin;
   animation-duration: 0.3s;
   animation-iteration-count: 1;
   animation-direction: normal;
   animation-fill-mode: forwards;
-  width: 95% !important;
-  height: 22vw;
-  background-color: #383b3d;
-  margin: 5% 0 0 0 !important;
-  outline: 1.2vw solid #2a2b2c;
 }
