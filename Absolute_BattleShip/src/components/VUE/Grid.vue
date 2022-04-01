@@ -22,8 +22,57 @@
             </tbody>
           </table>
         </div>
-        <div class="col-6">
-          <div class="row"></div>
+        <div class="col-6 ships">
+          <div class="row">
+            <div class="col-1">
+              <h3>1x</h3>
+            </div>
+            <div class="col-11">
+              <div class="row" draggable="true">
+                <div v-for="shipLength in 5" :key="shipLength" class="ship"></div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-1">
+              <h3>1x</h3>
+            </div>
+            <div class="col-11">
+              <div class="row" draggable="true">
+                <div v-for="shipLength in 4" :key="shipLength" class="ship"></div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-1">
+              <h3>1x</h3>
+            </div>
+            <div class="col-11">
+              <div class="row" draggable="true">
+                <div v-for="shipLength in 3" :key="shipLength" class="ship"></div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-1">
+              <h3>3x</h3>
+            </div>
+            <div class="col-11">
+              <div class="row" draggable="true">
+                <div v-for="shipLength in 2" :key="shipLength" class="ship"></div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-1">
+              <h3>4x</h3>
+            </div>
+            <div class="col-11">
+              <div class="row" draggable="true">
+                <div class="ship"></div>
+              </div>
+            </div>
+          </div>
           <div class="row">
             <button class="btn btn-style" @click="$emit('exitPreGame', 0)">Esci</button>
           </div>
@@ -38,12 +87,17 @@ export default {
   props: ['rowIndicators'],
   data() {
     return {
+      shipLength: 0,
     };
   },
 };
 </script>
 
 <style scoped>
+h3 {
+  text-align: center;
+  line-height: 2;
+}
 </style>
 
 <!--

@@ -7,17 +7,16 @@
 }
 * {
   color: white;
+  font-family: odGmText;
 }
 .title-h1 {
   font-size: 5vw;
   text-align: center;
-  margin-bottom: 4%;
-  font-family: odGmText;
+  margin-bottom: 2%;
 }
 .detail-game {
   margin: 1% 0 0 0 !important;
   text-align: justify;
-  font-family: odGmText;
 }
 .detail-game > h4 {
   font-size: 1.5vw !important;
@@ -40,7 +39,6 @@ table.grid {
   margin-left: 1vw;
 }
 .btn-style {
-  font-family: odGmText;
   font-size: 4vw !important;
   background-color: #a76d16 !important;
   border: 0.6vw solid #6b5535 !important;
@@ -72,4 +70,14 @@ table.grid {
   animation-iteration-count: 1;
   animation-direction: normal;
   animation-fill-mode: forwards;
+}
+.ship {
+  background-color: #696661;
+  height: 3vw !important;
+  width: 3.15vw !important;
+  border: 0.3vw solid #333231;
+  margin-bottom: 4% !important;
+}
+.ships {
+  margin-top: 4% !important;
 }
