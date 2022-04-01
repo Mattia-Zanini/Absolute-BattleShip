@@ -1,6 +1,5 @@
 https://www.youtube.com/watch?v=U2iZj_txFSc
-50:49
-
+51:20
 
 v-bind:[]			abbreviazione, :
 v-on:[]			abbreviazione, @

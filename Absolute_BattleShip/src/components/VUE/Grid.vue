@@ -6,9 +6,10 @@
         <div class="col-6">
           <table class="grid">
             <tbody>
-              <tr v-for="row in 11">
+              <tr v-for="row in 11" :key="row">
                 <td
                   v-for="col in 11"
+                  :key="col"
                   :class="[
                     { 'no-border': row == 1 || col == 1 },
                     { 'grid-border': row != 1 && col != 1 },
@@ -34,9 +35,9 @@
 
 <script>
 export default {
+  props: ['rowIndicators'],
   data() {
     return {
-      rowIndicators: ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"],
     };
   },
 };

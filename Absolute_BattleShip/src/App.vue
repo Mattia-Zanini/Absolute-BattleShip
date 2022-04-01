@@ -1,6 +1,30 @@
 <script setup>
 import { Game } from "./components/JS/Game.js";
 Game();
+const rIndi = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
+// - nothing
+// s player's ship
+// m player's miss
+// h player's hit
+// p pc's ship
+// n pc's miss
+// i pc's hit
+/*
+  '-', '-', '-', '-', '-', '-', '-', '-', '-', '-',
+  '-', '-', '-', '-', '-', '-', '-', '-', '-', '-',
+  '-', '-', '-', '-', '-', '-', '-', '-', '-', '-',
+  '-', '-', '-', '-', '-', '-', '-', '-', '-', '-',
+  '-', '-', '-', '-', '-', '-', '-', '-', '-', '-',
+  '-', '-', '-', '-', '-', '-', '-', '-', '-', '-',
+  '-', '-', '-', '-', '-', '-', '-', '-', '-', '-',
+  '-', '-', '-', '-', '-', '-', '-', '-', '-', '-',
+  '-', '-', '-', '-', '-', '-', '-', '-', '-', '-',
+  '-', '-', '-', '-', '-', '-', '-', '-', '-', '-',
+*/
+const grid = [];
+for (let i = 0; i < 100; i++)
+  grid.push('-');
+console.log(grid);
 </script>
 
 <template>
@@ -16,7 +40,7 @@ Game();
       <DetailGame @hideRules="showMenu" />
     </div>
     <div v-if="show == 2" class="row d-flex justify-content-center zoomin">
-      <Grid @exitPreGame="showMenu" />
+      <Grid @exitPreGame="showMenu" :rowIndicators="rIndi" />
     </div>
   </div>
 </template>
@@ -30,8 +54,6 @@ export default {
   // and will be exposed on `this`.
   data() {
     return {
-      row: 0,
-      col: 0,
       show: 0,
     };
   },
@@ -51,7 +73,7 @@ export default {
     console.log("App Correctrly mounted");
   },
   components: {
-    DetailGame,
+    DetailGame, Grid, GameMenu,
   },
 };
 </script>
