@@ -9,19 +9,14 @@ Game();
     <div class="row">
       <h1 class="title-h1">Absolute Battleship</h1>
     </div>
-    <!--<div class="row" v-if="!show">
-      <div class="col-5 detail-game">
-        <DetailGame />
-      </div>
-      <div class="col-6 d-flex justify-content-center">
-        <button class="btn btn-style" @click="showMenu">Nuova Partita</button>
-      </div>
-    </div>-->
     <div v-if="show == 0" class="row d-flex justify-content-center zoomin">
       <GameMenu @hideMenu="showMenu" />
     </div>
     <div v-if="show == 1" class="row d-flex justify-content-center zoomin">
       <DetailGame @hideRules="showMenu" />
+    </div>
+    <div v-if="show == 2" class="row d-flex justify-content-center zoomin">
+      <Grid @exitPreGame="showMenu" />
     </div>
   </div>
 </template>

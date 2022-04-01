@@ -1,7 +1,7 @@
 <template>
     <div class="col-12 game-menu">
         <div class="row">
-            <button class="btn btn-style">Gioca</button>
+            <button class="btn btn-style" @click="$emit('hideMenu', 2)">Gioca</button>
         </div>
         <div class="row">
             <button class="btn btn-style" @click="$emit('hideMenu', 1)">Regole</button>
