@@ -13,8 +13,10 @@
                   :class="[
                     { 'no-border': row == 1 || col == 1 },
                     { 'grid-border': row != 1 && col != 1 },
+                    { 'blue': EmptyTD('-', row, col) },
                   ]"
                 >
+                  <!--row:{{ row }} col:{{ col }}-->
                   <div class="indicator" v-if="col == 1 && row != 1">{{ rowIndicators[row - 2] }}</div>
                   <div class="indicator" v-if="col != 1 && row == 1">{{ col - 1 }}</div>
                 </td>
@@ -84,11 +86,28 @@
 
 <script>
 export default {
-  props: ['rowIndicators'],
+  props: ['rowIndicators', 'grid'],
   data() {
     return {
       shipLength: 0,
     };
+  },
+  methods: {
+    EmptyTD(_value, _row, _col) {
+      if (_row == 1 || _col == 1)
+        return false
+      _row = _row - 2
+      _col = _col - 2
+      let pos = ((_row * 10) + _col)
+      if (pos < 0)
+        return false
+      //console.log("row: " + _row + " col: " + _col + " pos: " + pos);
+      console.log("pos: " + pos)
+      if (this.grid[pos] == _value)
+        return true
+      else
+        return false
+    }
   },
 };
 </script>
@@ -97,6 +116,10 @@ export default {
 h3 {
   text-align: center;
   line-height: 2;
+  user-select: none;
+}
+.blue {
+  background-color: blue;
 }
 </style>
 

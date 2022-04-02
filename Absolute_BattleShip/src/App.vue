@@ -40,7 +40,7 @@ console.log(grid);
       <DetailGame @hideRules="showMenu" />
     </div>
     <div v-if="show == 2" class="row d-flex justify-content-center zoomin">
-      <Grid @exitPreGame="showMenu" :rowIndicators="rIndi" />
+      <Grid @exitPreGame="showMenu" :rowIndicators="rIndi" :grid="grid" />
     </div>
   </div>
 </template>
