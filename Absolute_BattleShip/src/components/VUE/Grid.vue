@@ -1,5 +1,5 @@
 <template>
-  <div class="row">
+  <div class="row game-menu">
     <div class="col-12">
       <div class="row">
         <!-- GRID -->
@@ -119,7 +119,11 @@ h3 {
   user-select: none;
 }
 .blue {
-  background-color: blue;
+  background-color: #2784cf;
+}
+.game-menu {
+  height: 38vw;
+  margin: 0 0 0 0 !important;
 }
 </style>
 

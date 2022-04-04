@@ -10,21 +10,43 @@ export class Ship {
     this.Length = _Length;
   }
 }
+// - nothing
+// s ship
+// m miss
+// h hit
+/*
+  '-', '-', '-', '-', '-', '-', '-', '-', '-', '-',
+  '-', '-', '-', '-', '-', '-', '-', '-', '-', '-',
+  '-', '-', '-', '-', '-', '-', '-', '-', '-', '-',
+  '-', '-', '-', '-', '-', '-', '-', '-', '-', '-',
+  '-', '-', '-', '-', '-', '-', '-', '-', '-', '-',
+  '-', '-', '-', '-', '-', '-', '-', '-', '-', '-',
+  '-', '-', '-', '-', '-', '-', '-', '-', '-', '-',
+  '-', '-', '-', '-', '-', '-', '-', '-', '-', '-',
+  '-', '-', '-', '-', '-', '-', '-', '-', '-', '-',
+  '-', '-', '-', '-', '-', '-', '-', '-', '-', '-',
+*/
 export class Player {
   name;
   ships;
+  grid;
   constructor(_name) {
     this.name = _name;
     this.ships = [];
+    this.grid = [];
+    this.StartGrid();
   }
-  newShip(_id, _name, _Length) {
+  NewShip(_id, _name, _Length) {
     this.ships.push(new Ship(_id, _name, _Length));
     return this.ships[this.ships.length - 1];
   }
-  get allShips() {
+  get AllShips() {
     return this.ships;
   }
-  get numberOfShips() {
+  get NumberOfShips() {
     return this.ships.length;
+  }
+  StartGrid() {
+    for (let i = 0; i < 100; i++) this.grid.push("-");
   }
 }

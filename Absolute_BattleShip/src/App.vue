@@ -1,30 +1,7 @@
 <script setup>
-import { Game } from "./components/JS/Game.js";
+import { Game, giocatore, bot } from "./components/JS/Game.js";
 Game();
 const rIndi = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
-// - nothing
-// s player's ship
-// m player's miss
-// h player's hit
-// p pc's ship
-// n pc's miss
-// i pc's hit
-/*
-  '-', '-', '-', '-', '-', '-', '-', '-', '-', '-',
-  '-', '-', '-', '-', '-', '-', '-', '-', '-', '-',
-  '-', '-', '-', '-', '-', '-', '-', '-', '-', '-',
-  '-', '-', '-', '-', '-', '-', '-', '-', '-', '-',
-  '-', '-', '-', '-', '-', '-', '-', '-', '-', '-',
-  '-', '-', '-', '-', '-', '-', '-', '-', '-', '-',
-  '-', '-', '-', '-', '-', '-', '-', '-', '-', '-',
-  '-', '-', '-', '-', '-', '-', '-', '-', '-', '-',
-  '-', '-', '-', '-', '-', '-', '-', '-', '-', '-',
-  '-', '-', '-', '-', '-', '-', '-', '-', '-', '-',
-*/
-const grid = [];
-for (let i = 0; i < 100; i++)
-  grid.push('-');
-console.log(grid);
 </script>
 
 <template>
@@ -40,7 +17,7 @@ console.log(grid);
       <DetailGame @hideRules="showMenu" />
     </div>
     <div v-if="show == 2" class="row d-flex justify-content-center zoomin">
-      <Grid @exitPreGame="showMenu" :rowIndicators="rIndi" :grid="grid" />
+      <Grid @exitPreGame="showMenu" :rowIndicators="rIndi" :grid="giocatore.grid" />
     </div>
   </div>
 </template>
