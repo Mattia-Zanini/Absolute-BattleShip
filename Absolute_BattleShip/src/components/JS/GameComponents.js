@@ -4,10 +4,14 @@ export class Ship {
   Length;
   isVertical;
   isSelected;
+  placed;
   constructor(_id, _name, _Length) {
     this.id = _id;
     this.name = _name;
     this.Length = _Length;
+    this.isVertical = false;
+    this.isSelected = false;
+    this.placed = false;
   }
 }
 // - nothing

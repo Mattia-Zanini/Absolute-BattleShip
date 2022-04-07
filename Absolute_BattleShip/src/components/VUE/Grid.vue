@@ -15,6 +15,8 @@
                     { 'grid-border': row != 1 && col != 1 },
                     { 'blue': EmptyTD('-', row, col) },
                   ]"
+                  :value="GetPos(row, col)"
+                  @click="ClickTD($event)"
                 >
                   <!--row:{{ row }} col:{{ col }}-->
                   <div class="indicator" v-if="col == 1 && row != 1">{{ rowIndicators[row - 2] }}</div>
@@ -89,7 +91,6 @@ export default {
   props: ['rowIndicators', 'grid'],
   data() {
     return {
-      shipLength: 0,
     };
   },
   methods: {
@@ -107,7 +108,19 @@ export default {
         return true
       else
         return false
-    }
+    },
+    ClickTD(e) {
+      if (e.currentTarget.getAttribute('class') == "no-border")
+        console.log("it isn't a valid cell")
+      else
+        console.log("Clicked cell in pos: " + e.currentTarget.getAttribute('value'))
+    },
+    GetPos(_row, _col) {
+      _row = _row - 2
+      _col = _col - 2
+      let pos = ((_row * 10) + _col)
+      return pos
+    },
   },
 };
 </script>
