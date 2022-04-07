@@ -2,6 +2,7 @@
 import { Game, giocatore, bot } from "./components/JS/Game.js";
 Game();
 const rIndi = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
+const alreadyMounted = false;
 </script>
 
 <template>
@@ -22,6 +23,7 @@ const rIndi = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
         :rowIndicators="rIndi"
         :grid="giocatore.grid"
         :player="giocatore"
+        :aldMntd="alreadyMounted"
       />
     </div>
   </div>
@@ -44,7 +46,9 @@ export default {
   methods: {
     showMenu(_value) {
       this.show = _value;
-      console.log("Questo è il valore di show " + this.show);
+      console.log("This is show's value: " + this.show);
+      if (_value == 0)
+        this.alreadyMounted = true;
     },
   },
 
@@ -52,7 +56,7 @@ export default {
   // of a component's lifecycle.
   // This function will be called when the component is mounted.
   mounted() {
-    console.log("App Correctrly mounted");
+    console.log("App Correctly mounted");
   },
   components: {
     DetailGame, Grid, GameMenu,

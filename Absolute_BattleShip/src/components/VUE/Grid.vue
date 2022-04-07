@@ -29,7 +29,7 @@
         <div class="col-6 ships">
           <div class="row">
             <div class="col-1">
-              <h3>1x</h3>
+              <h3>{{ nAirCarr }}x</h3>
             </div>
             <div class="col-11">
               <div class="row" id="Aircraft Carrier" @click="SelectShip">
@@ -39,7 +39,7 @@
           </div>
           <div class="row">
             <div class="col-1">
-              <h3>1x</h3>
+              <h3>{{ nBatt }}x</h3>
             </div>
             <div class="col-11">
               <div class="row" id="Battleship" @click="SelectShip">
@@ -49,7 +49,7 @@
           </div>
           <div class="row">
             <div class="col-1">
-              <h3>1x</h3>
+              <h3>{{ nSub }}x</h3>
             </div>
             <div class="col-11">
               <div class="row" id="Submarine" @click="SelectShip">
@@ -59,7 +59,7 @@
           </div>
           <div class="row">
             <div class="col-1">
-              <h3>3x</h3>
+              <h3>{{ nCru }}x</h3>
             </div>
             <div class="col-11">
               <div class="row" id="Cruiser" @click="SelectShip">
@@ -69,7 +69,7 @@
           </div>
           <div class="row">
             <div class="col-1">
-              <h3>4x</h3>
+              <h3>{{ nDest }}x</h3>
             </div>
             <div class="col-11">
               <div class="row" id="Destroyer" @click="SelectShip">
@@ -88,10 +88,16 @@
 
 <script>
 export default {
-  props: ['rowIndicators', 'grid', 'player'],
+  props: ['rowIndicators', 'grid', 'player', 'aldMntd'],
   data() {
     return {
       shipSelected: "",
+      rotate: false,
+      nAirCarr: 1,
+      nBatt: 1,
+      nSub: 1,
+      nCru: 3,
+      nDest: 4,
     };
   },
   methods: {
@@ -104,7 +110,7 @@ export default {
       if (pos < 0)
         return false
       //console.log("row: " + _row + " col: " + _col + " pos: " + pos);
-      console.log("pos: " + pos)
+      //console.log("pos: " + pos)
       if (this.grid[pos] == _value)
         return true
       else
@@ -115,10 +121,9 @@ export default {
         console.log("it isn't a valid cell")
       else
         console.log("Clicked cell in pos: " + e.currentTarget.getAttribute('value'))
-      if (this.shipSelected != "") {
-        for (let i = 0; i < this.player.ships.length; i++) {
-          if (this.player.ships[i].name == this.shipSelected) { console.log("placed") }
-        }
+      if (this.shipSelected != "" && !e.currentTarget.getAttribute('class').includes("busy")) {
+        e.currentTarget.classList.add("busy")
+        e.currentTarget.classList.remove("blue")
       }
     },
     GetPos(_row, _col) {
@@ -129,18 +134,53 @@ export default {
     },
     SelectShip(e) {
       let classes = e.currentTarget.getAttribute('class')
+      let name = e.currentTarget.getAttribute('id')
+      console.log(name)
       if (classes.includes("selected") && this.shipSelected != "") {
         console.log("Deselected: " + e.currentTarget.getAttribute('id'))
         e.currentTarget.classList.remove('selected')
         this.shipSelected = ""
       }
-      else if (this.shipSelected == "") {
+      else if (this.shipSelected == "" && GetShipsLeft(name)) {
         e.currentTarget.classList.add('selected')
         this.shipSelected = e.currentTarget.getAttribute('id')
-        console.log("Selected: " + e.currentTarget.getAttribute('id'))
+        console.log("Selected: " + name)
       }
       //console.log("Class: " + e.currentTarget.getAttribute('class'))
     },
+    GetShipsLeft(_name) {
+      console.log("cotrollo nave")
+      switch (_name) {
+        case "Aircraft Carrier":
+          if (this.nAirCarr > 0) {
+            this.nAirCarr--
+            return true
+          }
+          else
+            return false
+        case "Battleship":
+          return this.nBatt
+        case "Submarine":
+          return this.nSub
+        case "Cruiser":
+          return this.nCru
+        case "Destroyer":
+          return this.nDest
+      }
+    },
+  },
+  mounted() {
+    console.log("Grid mounted")
+    console.log("EventListener already mounted: " + this.aldMntd)
+    if (!this.aldMntd) {
+      window.addEventListener("keypress", e => {
+        let key = String.fromCharCode(e.keyCode)
+        if (key == 'r') {
+          this.rotate = !this.rotate
+          console.log("Key pressed: " + key + ", rotate value: " + this.rotate);
+        }
+      });
+    }
   },
 };
 </script>
@@ -160,6 +200,9 @@ h3 {
 }
 .selected {
   outline: 10px solid yellow !important;
+}
+.busy {
+  background-color: #727980;
 }
 </style>
 
