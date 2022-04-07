@@ -16,7 +16,7 @@
                     { 'blue': EmptyTD('-', row, col) },
                   ]"
                   :value="GetPos(row, col)"
-                  @click="ClickTD($event)"
+                  @click="ClickTD"
                 >
                   <!--row:{{ row }} col:{{ col }}-->
                   <div class="indicator" v-if="col == 1 && row != 1">{{ rowIndicators[row - 2] }}</div>
@@ -32,7 +32,7 @@
               <h3>1x</h3>
             </div>
             <div class="col-11">
-              <div class="row" draggable="true">
+              <div class="row" id="Aircraft Carrier" @click="SelectShip">
                 <div v-for="shipLength in 5" :key="shipLength" class="ship"></div>
               </div>
             </div>
@@ -42,7 +42,7 @@
               <h3>1x</h3>
             </div>
             <div class="col-11">
-              <div class="row" draggable="true">
+              <div class="row" id="Battleship" @click="SelectShip">
                 <div v-for="shipLength in 4" :key="shipLength" class="ship"></div>
               </div>
             </div>
@@ -52,7 +52,7 @@
               <h3>1x</h3>
             </div>
             <div class="col-11">
-              <div class="row" draggable="true">
+              <div class="row" id="Submarine" @click="SelectShip">
                 <div v-for="shipLength in 3" :key="shipLength" class="ship"></div>
               </div>
             </div>
@@ -62,7 +62,7 @@
               <h3>3x</h3>
             </div>
             <div class="col-11">
-              <div class="row" draggable="true">
+              <div class="row" id="Cruiser" @click="SelectShip">
                 <div v-for="shipLength in 2" :key="shipLength" class="ship"></div>
               </div>
             </div>
@@ -72,7 +72,7 @@
               <h3>4x</h3>
             </div>
             <div class="col-11">
-              <div class="row" draggable="true">
+              <div class="row" id="Destroyer" @click="SelectShip">
                 <div class="ship"></div>
               </div>
             </div>
@@ -88,9 +88,10 @@
 
 <script>
 export default {
-  props: ['rowIndicators', 'grid'],
+  props: ['rowIndicators', 'grid', 'player'],
   data() {
     return {
+      shipSelected: "",
     };
   },
   methods: {
@@ -114,12 +115,31 @@ export default {
         console.log("it isn't a valid cell")
       else
         console.log("Clicked cell in pos: " + e.currentTarget.getAttribute('value'))
+      if (this.shipSelected != "") {
+        for (let i = 0; i < this.player.ships.length; i++) {
+          if (this.player.ships[i].name == this.shipSelected) { console.log("placed") }
+        }
+      }
     },
     GetPos(_row, _col) {
       _row = _row - 2
       _col = _col - 2
       let pos = ((_row * 10) + _col)
       return pos
+    },
+    SelectShip(e) {
+      let classes = e.currentTarget.getAttribute('class')
+      if (classes.includes("selected") && this.shipSelected != "") {
+        console.log("Deselected: " + e.currentTarget.getAttribute('id'))
+        e.currentTarget.classList.remove('selected')
+        this.shipSelected = ""
+      }
+      else if (this.shipSelected == "") {
+        e.currentTarget.classList.add('selected')
+        this.shipSelected = e.currentTarget.getAttribute('id')
+        console.log("Selected: " + e.currentTarget.getAttribute('id'))
+      }
+      //console.log("Class: " + e.currentTarget.getAttribute('class'))
     },
   },
 };
@@ -137,6 +157,9 @@ h3 {
 .game-menu {
   height: 38vw;
   margin: 0 0 0 0 !important;
+}
+.selected {
+  outline: 10px solid yellow !important;
 }
 </style>
 

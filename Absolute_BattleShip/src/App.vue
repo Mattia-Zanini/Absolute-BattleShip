@@ -17,7 +17,12 @@ const rIndi = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
       <DetailGame @hideRules="showMenu" />
     </div>
     <div v-if="show == 2" class="row d-flex justify-content-center zoomin">
-      <Grid @exitPreGame="showMenu" :rowIndicators="rIndi" :grid="giocatore.grid" />
+      <Grid
+        @exitPreGame="showMenu"
+        :rowIndicators="rIndi"
+        :grid="giocatore.grid"
+        :player="giocatore"
+      />
     </div>
   </div>
 </template>
