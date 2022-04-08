@@ -101,6 +101,21 @@ export default {
     };
   },
   methods: {
+    wow(name) {
+      console.log("checking ships left for " + name)
+      /*switch (_name) {
+        case "Aircraft Carrier":
+          return this.nAirCarr
+        case "Battleship":
+          return this.nBatt
+        case "Submarine":
+          return this.nSub
+        case "Cruiser":
+          return this.nCru
+        case "Destroyer":
+          return this.nDest
+      }*/
+    },
     EmptyTD(_value, _row, _col) {
       if (_row == 1 || _col == 1)
         return false
@@ -135,39 +150,22 @@ export default {
     SelectShip(e) {
       let classes = e.currentTarget.getAttribute('class')
       let name = e.currentTarget.getAttribute('id')
-      console.log(name)
+      let prova = wow(name)
+      console.log("vediamo se funzia" + prova)
+      console.log("Trying to select " + name)
       if (classes.includes("selected") && this.shipSelected != "") {
         console.log("Deselected: " + e.currentTarget.getAttribute('id'))
         e.currentTarget.classList.remove('selected')
         this.shipSelected = ""
       }
-      else if (this.shipSelected == "" && GetShipsLeft(name)) {
+      else if (this.shipSelected == "") {
         e.currentTarget.classList.add('selected')
         this.shipSelected = e.currentTarget.getAttribute('id')
         console.log("Selected: " + name)
       }
       //console.log("Class: " + e.currentTarget.getAttribute('class'))
     },
-    GetShipsLeft(_name) {
-      console.log("cotrollo nave")
-      switch (_name) {
-        case "Aircraft Carrier":
-          if (this.nAirCarr > 0) {
-            this.nAirCarr--
-            return true
-          }
-          else
-            return false
-        case "Battleship":
-          return this.nBatt
-        case "Submarine":
-          return this.nSub
-        case "Cruiser":
-          return this.nCru
-        case "Destroyer":
-          return this.nDest
-      }
-    },
+
   },
   mounted() {
     console.log("Grid mounted")
@@ -200,6 +198,8 @@ h3 {
 }
 .selected {
   outline: 10px solid yellow !important;
+  height: 3vw !important;
+  width: 16vw !important;
 }
 .busy {
   background-color: #727980;
