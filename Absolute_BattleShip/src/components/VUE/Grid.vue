@@ -26,12 +26,13 @@
             </tbody>
           </table>
         </div>
+        <!-- SHIPS -->
         <div class="col-6 ships">
           <div class="row">
             <div class="col-1">
               <h3>{{ nAirCarr }}x</h3>
             </div>
-            <div class="col-11">
+            <div class="col-10">
               <div class="row" id="Aircraft Carrier" @click="SelectShip">
                 <div v-for="shipLength in 5" :key="shipLength" class="ship"></div>
               </div>
@@ -101,21 +102,6 @@ export default {
     };
   },
   methods: {
-    wow(_name) {
-      console.log("checking ships left for " + _name)
-      switch (_name) {
-        case "Aircraft Carrier":
-          return this.nAirCarr
-        case "Battleship":
-          return this.nBatt
-        case "Submarine":
-          return this.nSub
-        case "Cruiser":
-          return this.nCru
-        case "Destroyer":
-          return this.nDest
-      }
-    },
     EmptyTD(_value, _row, _col) {
       if (_row == 1 || _col == 1)
         return false
@@ -149,23 +135,54 @@ export default {
     },
     SelectShip(e) {
       let classes = e.currentTarget.getAttribute('class')
-      let name = e.currentTarget.getAttribute('id')
+      let ship = e.currentTarget.getAttribute('id')
       /*let prova = this.wow(name)
       console.log("vediamo se funzia " + prova)*/
-      console.log("Trying to select " + name)
+      console.log("Clicked: " + ship)
       if (classes.includes("selected") && this.shipSelected != "") {
-        console.log("Deselected: " + e.currentTarget.getAttribute('id'))
+        e.currentTarget.classList.remove('selected-' + this.GetShipLength(ship))
         e.currentTarget.classList.remove('selected')
         this.shipSelected = ""
+        console.log("Deselected: " + ship)
       }
-      else if (this.shipSelected == "" && this.wow(name) > 0) {
+      else if (this.shipSelected == "" && this.GetShipLeft(ship) > 0) {
+        this.shipSelected = ship
         e.currentTarget.classList.add('selected')
-        this.shipSelected = e.currentTarget.getAttribute('id')
-        console.log("Selected: " + name)
+        e.currentTarget.classList.add('selected-' + this.GetShipLength(ship))
+        console.log("Selected: " + ship)
       }
       //console.log("Class: " + e.currentTarget.getAttribute('class'))
     },
-
+    GetShipLeft(_name) {
+      console.log("Checking ships left for " + _name)
+      switch (_name) {
+        case "Aircraft Carrier":
+          return this.nAirCarr
+        case "Battleship":
+          return this.nBatt
+        case "Submarine":
+          return this.nSub
+        case "Cruiser":
+          return this.nCru
+        case "Destroyer":
+          return this.nDest
+      }
+    },
+    GetShipLength(_name) {
+      console.log("Getting ships length for " + _name)
+      switch (_name) {
+        case "Aircraft Carrier":
+          return 5
+        case "Battleship":
+          return 4
+        case "Submarine":
+          return 3
+        case "Cruiser":
+          return 2
+        case "Destroyer":
+          return 1
+      }
+    },
   },
   mounted() {
     console.log("Grid mounted")
@@ -197,9 +214,24 @@ h3 {
   margin: 0 0 0 0 !important;
 }
 .selected {
-  outline: 10px solid yellow !important;
+  outline: 0.2vw solid yellow !important;
   height: 3vw !important;
-  width: 16vw !important;
+  margin-bottom: 4.13% !important;
+}
+.selected-5 {
+  width: 15.8vw !important;
+}
+.selected-4 {
+  width: 12.6vw !important;
+}
+.selected-3 {
+  width: 9.5vw !important;
+}
+.selected-2 {
+  width: 6.3vw !important;
+}
+.selected-1 {
+  width: 3.15vw !important;
 }
 .busy {
   background-color: #727980;
