@@ -101,9 +101,9 @@ export default {
     };
   },
   methods: {
-    wow(name) {
-      console.log("checking ships left for " + name)
-      /*switch (_name) {
+    wow(_name) {
+      console.log("checking ships left for " + _name)
+      switch (_name) {
         case "Aircraft Carrier":
           return this.nAirCarr
         case "Battleship":
@@ -114,7 +114,7 @@ export default {
           return this.nCru
         case "Destroyer":
           return this.nDest
-      }*/
+      }
     },
     EmptyTD(_value, _row, _col) {
       if (_row == 1 || _col == 1)
@@ -150,15 +150,15 @@ export default {
     SelectShip(e) {
       let classes = e.currentTarget.getAttribute('class')
       let name = e.currentTarget.getAttribute('id')
-      let prova = wow(name)
-      console.log("vediamo se funzia" + prova)
+      /*let prova = this.wow(name)
+      console.log("vediamo se funzia " + prova)*/
       console.log("Trying to select " + name)
       if (classes.includes("selected") && this.shipSelected != "") {
         console.log("Deselected: " + e.currentTarget.getAttribute('id'))
         e.currentTarget.classList.remove('selected')
         this.shipSelected = ""
       }
-      else if (this.shipSelected == "") {
+      else if (this.shipSelected == "" && this.wow(name) > 0) {
         e.currentTarget.classList.add('selected')
         this.shipSelected = e.currentTarget.getAttribute('id')
         console.log("Selected: " + name)
