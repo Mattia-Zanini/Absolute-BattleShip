@@ -7,17 +7,11 @@
           <table class="grid">
             <tbody>
               <tr v-for="row in 11" :key="row">
-                <td
-                  v-for="col in 11"
-                  :key="col"
-                  :class="[
-                    { 'no-border': row == 1 || col == 1 },
-                    { 'grid-border': row != 1 && col != 1 },
-                    { 'blue': EmptyTD('-', row, col) },
-                  ]"
-                  :value="GetPos(row, col)"
-                  @click="ClickTD"
-                >
+                <td v-for="col in 11" :key="col" :class="[
+                  { 'no-border': row == 1 || col == 1 },
+                  { 'grid-border': row != 1 && col != 1 },
+                  { 'blue': EmptyTD('-', row, col) },
+                ]" :value="GetPos(row, col)" @click="ClickTD">
                   <!--row:{{ row }} col:{{ col }}-->
                   <div class="indicator" v-if="col == 1 && row != 1">{{ rowIndicators[row - 2] }}</div>
                   <div class="indicator" v-if="col != 1 && row == 1">{{ col - 1 }}</div>
@@ -42,7 +36,7 @@
             <div class="col-1">
               <h3>{{ nBatt }}x</h3>
             </div>
-            <div class="col-11">
+            <div class="col-10">
               <div class="row" id="Battleship" @click="SelectShip">
                 <div v-for="shipLength in 4" :key="shipLength" class="ship"></div>
               </div>
@@ -52,7 +46,7 @@
             <div class="col-1">
               <h3>{{ nSub }}x</h3>
             </div>
-            <div class="col-11">
+            <div class="col-10">
               <div class="row" id="Submarine" @click="SelectShip">
                 <div v-for="shipLength in 3" :key="shipLength" class="ship"></div>
               </div>
@@ -62,7 +56,7 @@
             <div class="col-1">
               <h3>{{ nCru }}x</h3>
             </div>
-            <div class="col-11">
+            <div class="col-10">
               <div class="row" id="Cruiser" @click="SelectShip">
                 <div v-for="shipLength in 2" :key="shipLength" class="ship"></div>
               </div>
@@ -72,7 +66,7 @@
             <div class="col-1">
               <h3>{{ nDest }}x</h3>
             </div>
-            <div class="col-11">
+            <div class="col-10">
               <div class="row" id="Destroyer" @click="SelectShip">
                 <div class="ship"></div>
               </div>
@@ -83,8 +77,7 @@
           </div>
         </div>
       </div>
-    </div>
-  </div>
+    </div>  </div>
 </template>
 
 <script>
@@ -99,6 +92,16 @@ export default {
       nSub: 1,
       nCru: 3,
       nDest: 4,
+      carrierCheckHorizontal: [-11, -10, -9, -8, -7, -6, -5, -1, 0, 1, 2, 3, 4, 5, 9, 10, 11, 12, 13, 14, 15],
+      carrierCheckVertical: [-11, -10, -9, -1, 0, 1, 9, 10, 11, 19, 20, 21, 29, 30, 31, 39, 40, 41, 49, 50, 51],
+      battleshipCheckHorizontal: [-11, -10, -9, -8, -7, -6, -1, 0, 1, 2, 3, 4, 9, 10, 11, 12, 13, 14],
+      battleshipCheckVertical: [-11, -10, -9, -1, 0, 1, 9, 10, 11, 19, 20, 21, 29, 30, 31, 39, 40, 41],
+      submarineCheckHorizontal: [-11, -10, -9, -8, -7, -1, 0, 1, 2, 3, 9, 10, 11, 12, 13],
+      submarineCheckVertical: [-11, -10, -9, -1, 0, 1, 9, 10, 11, 19, 20, 21, 29, 30, 31],
+      cruiserCheckHorizontal: [-11, -10, -9, -8, -1, 0, 1, 2, 9, 10, 11, 12],
+      cruiserCheckVertical: [-11, -10, -9, -1, 0, 1, 9, 10, 11, 19, 20, 21],
+      destroyerCheckHorizontal: [-11, -10, -9, -1, 0, 1, 9, 10, 11],
+      destroyerCheckVertical: [-11, -10, -9, -1, 0, 1, 9, 10, 11],
     };
   },
   methods: {
@@ -125,6 +128,7 @@ export default {
       if (this.shipSelected != "" && !e.currentTarget.getAttribute('class').includes("busy")) {
         e.currentTarget.classList.add("busy")
         e.currentTarget.classList.remove("blue")
+
       }
     },
     GetPos(_row, _col) {
@@ -183,6 +187,11 @@ export default {
           return 1
       }
     },
+    ValidatePlacement(_ship, _posToPlace, _isVertical) {
+      if (this.grid[_posToPlace] != "")
+        return false
+      let length = this.GetShipLength(_ship)
+    }
   },
   mounted() {
     console.log("Grid mounted")
@@ -206,33 +215,42 @@ h3 {
   line-height: 2;
   user-select: none;
 }
+
 .blue {
   background-color: #2784cf;
 }
+
 .game-menu {
   height: 38vw;
   margin: 0 0 0 0 !important;
 }
+
 .selected {
   outline: 0.2vw solid yellow !important;
   height: 3vw !important;
   margin-bottom: 4.13% !important;
 }
+
 .selected-5 {
   width: 15.8vw !important;
 }
+
 .selected-4 {
   width: 12.6vw !important;
 }
+
 .selected-3 {
   width: 9.5vw !important;
 }
+
 .selected-2 {
   width: 6.3vw !important;
 }
+
 .selected-1 {
   width: 3.15vw !important;
 }
+
 .busy {
   background-color: #727980;
 }
