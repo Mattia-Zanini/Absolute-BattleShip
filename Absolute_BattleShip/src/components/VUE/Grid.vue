@@ -77,7 +77,8 @@
           </div>
         </div>
       </div>
-    </div>  </div>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -125,7 +126,7 @@ export default {
         console.log("it isn't a valid cell")
       else
         console.log("Clicked cell in pos: " + e.currentTarget.getAttribute('value'))
-      if (this.shipSelected != "" && !e.currentTarget.getAttribute('class').includes("busy")) {
+      if (this.shipSelected != "" && !e.currentTarget.getAttribute('class').includes("busy") && this.ValidatePlacement(this.shipSelected, e.currentTarget.getAttribute('value'), this.rotate)) {
         e.currentTarget.classList.add("busy")
         e.currentTarget.classList.remove("blue")
 
@@ -188,9 +189,58 @@ export default {
       }
     },
     ValidatePlacement(_ship, _posToPlace, _isVertical) {
-      if (this.grid[_posToPlace] != "")
+      if (this.grid[_posToPlace] != '-')
         return false
       let length = this.GetShipLength(_ship)
+      console.log("Checking if " + _ship + " can be placed at " + _posToPlace + " with length " + length)
+      switch (length) {
+        case 5:
+          if (_isVertical) {
+            for (let i = 0; i < this.carrierCheckVertical.length; i++) {
+              console.log("Checking pos: " + (this.carrierCheckVertical[i] + _posToPlace))
+              if (this.grid[(_posToPlace + this.carrierCheckVertical[i])] != '-')
+                return false
+            }
+            return true
+          }
+          else {
+            for (let i = 0; i < this.carrierCheckHorizontal.length; i++) {
+              if (this.grid[(_posToPlace + this.carrierCheckHorizontal[i])] != '-')
+                return false
+            }
+            return true
+          }
+        case 4:
+          if (_isVertical) {
+            for (let i = 0; i < this.battleshipCheckVertical.length; i++) {
+              if (this.grid[(_posToPlace + this.battleshipCheckVertical[i])] != '-')
+                return false
+            }
+            return true
+          }
+          else {
+            for (let i = 0; i < this.battleshipCheckHorizontal.length; i++) {
+              if (this.grid[(_posToPlace + this.battleshipCheckHorizontal[i])] != '-')
+                return false
+            }
+            return true
+          }
+        case 3:
+          if (_isVertical) {
+            for (let i = 0; i < this.battleshipCheckVertical.length; i++) {
+              if (this.grid[(_posToPlace + this.battleshipCheckVertical[i])] != '-')
+                return false
+            }
+            return true
+          }
+          else {
+            for (let i = 0; i < this.battleshipCheckHorizontal.length; i++) {
+              if (this.grid[(_posToPlace + this.battleshipCheckHorizontal[i])] != '-')
+                return false
+            }
+            return true
+          }
+      }
     }
   },
   mounted() {
