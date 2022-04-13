@@ -131,6 +131,10 @@ export default {
         e.currentTarget.classList.remove("blue")
 
       }
+      else if (this.ValidatePlacement(this.shipSelected, e.currentTarget.getAttribute('value'), this.rotate) == false || e.currentTarget.getAttribute('class').includes("busy"))
+        console.log("Cell already busy")
+      else
+        console.log("You haven't selected a ship yet")
     },
     GetPos(_row, _col) {
       _row = _row - 2
@@ -192,20 +196,21 @@ export default {
       if (this.grid[_posToPlace] != '-')
         return false
       let length = this.GetShipLength(_ship)
-      console.log("Checking if " + _ship + " can be placed at " + _posToPlace + " with length " + length)
+      let pos = parseInt(_posToPlace)
+      console.log("Checking if " + _ship + " can be placed at " + pos + " with length " + length)
       switch (length) {
         case 5:
           if (_isVertical) {
             for (let i = 0; i < this.carrierCheckVertical.length; i++) {
-              console.log("Checking pos: " + (this.carrierCheckVertical[i] + _posToPlace))
-              if (this.grid[(_posToPlace + this.carrierCheckVertical[i])] != '-')
+              console.log("Checking pos: " + (this.carrierCheckVertical[i] + pos))
+              if (this.grid[(pos + this.carrierCheckVertical[i])] != '-')
                 return false
             }
             return true
           }
           else {
             for (let i = 0; i < this.carrierCheckHorizontal.length; i++) {
-              if (this.grid[(_posToPlace + this.carrierCheckHorizontal[i])] != '-')
+              if (this.grid[(pos + this.carrierCheckHorizontal[i])] != '-')
                 return false
             }
             return true
@@ -213,14 +218,14 @@ export default {
         case 4:
           if (_isVertical) {
             for (let i = 0; i < this.battleshipCheckVertical.length; i++) {
-              if (this.grid[(_posToPlace + this.battleshipCheckVertical[i])] != '-')
+              if (this.grid[(pos + this.battleshipCheckVertical[i])] != '-')
                 return false
             }
             return true
           }
           else {
             for (let i = 0; i < this.battleshipCheckHorizontal.length; i++) {
-              if (this.grid[(_posToPlace + this.battleshipCheckHorizontal[i])] != '-')
+              if (this.grid[(pos + this.battleshipCheckHorizontal[i])] != '-')
                 return false
             }
             return true
@@ -228,14 +233,14 @@ export default {
         case 3:
           if (_isVertical) {
             for (let i = 0; i < this.battleshipCheckVertical.length; i++) {
-              if (this.grid[(_posToPlace + this.battleshipCheckVertical[i])] != '-')
+              if (this.grid[(pos + this.battleshipCheckVertical[i])] != '-')
                 return false
             }
             return true
           }
           else {
             for (let i = 0; i < this.battleshipCheckHorizontal.length; i++) {
-              if (this.grid[(_posToPlace + this.battleshipCheckHorizontal[i])] != '-')
+              if (this.grid[(pos + this.battleshipCheckHorizontal[i])] != '-')
                 return false
             }
             return true
