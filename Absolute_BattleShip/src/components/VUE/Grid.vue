@@ -101,8 +101,7 @@ export default {
       submarineCheckVertical: [-11, -10, -9, -1, 0, 1, 9, 10, 11, 19, 20, 21, 29, 30, 31],
       cruiserCheckHorizontal: [-11, -10, -9, -8, -1, 0, 1, 2, 9, 10, 11, 12],
       cruiserCheckVertical: [-11, -10, -9, -1, 0, 1, 9, 10, 11, 19, 20, 21],
-      destroyerCheckHorizontal: [-11, -10, -9, -1, 0, 1, 9, 10, 11],
-      destroyerCheckVertical: [-11, -10, -9, -1, 0, 1, 9, 10, 11],
+      destroyerCheck: [-11, -10, -9, -1, 0, 1, 9, 10, 11],
     };
   },
   methods: {
@@ -131,10 +130,13 @@ export default {
         e.currentTarget.classList.remove("blue")
 
       }
-      else if (this.ValidatePlacement(this.shipSelected, e.currentTarget.getAttribute('value'), this.rotate) == false || e.currentTarget.getAttribute('class').includes("busy"))
-        console.log("Cell already busy")
-      else
+      else if (this.shipSelected == "")
         console.log("You haven't selected a ship yet")
+      else
+        console.log("Cell already busy")
+      /*console.log("Validate Placement: " + this.ValidatePlacement(this.shipSelected, e.currentTarget.getAttribute('value'), this.rotate))
+      console.log("Class Busy: " + e.currentTarget.getAttribute('class').includes("busy"))*/
+      this.CleanCheck()
     },
     GetPos(_row, _col) {
       _row = _row - 2
@@ -232,21 +234,57 @@ export default {
           }
         case 3:
           if (_isVertical) {
-            for (let i = 0; i < this.battleshipCheckVertical.length; i++) {
-              if (this.grid[(pos + this.battleshipCheckVertical[i])] != '-')
+            for (let i = 0; i < this.submarineCheckVertical.length; i++) {
+              if (this.grid[(pos + this.submarineCheckVertical[i])] != '-')
                 return false
             }
             return true
           }
           else {
-            for (let i = 0; i < this.battleshipCheckHorizontal.length; i++) {
-              if (this.grid[(pos + this.battleshipCheckHorizontal[i])] != '-')
+            for (let i = 0; i < this.submarineCheckHorizontal.length; i++) {
+              if (this.grid[(pos + this.submarineCheckHorizontal[i])] != '-')
                 return false
             }
             return true
           }
+        case 2:
+          if (_isVertical) {
+            for (let i = 0; i < this.cruiserCheckVertical.length; i++) {
+              if (this.grid[(pos + this.cruiserCheckVertical[i])] != '-')
+                return false
+            }
+            return true
+          }
+          else {
+            for (let i = 0; i < this.cruiserCheckHorizontal.length; i++) {
+              if (this.grid[(pos + this.cruiserCheckHorizontal[i])] != '-')
+                return false
+            }
+            return true
+          }
+        case 1:
+          for (let i = 0; i < this.destroyerCheck.length; i++) {
+            if (this.grid[(pos + this.destroyerCheck[i])] != '-')
+              return false
+          }
+          return true
       }
-    }
+    },
+    CleanCheck() {
+      let leftCheck = [-11, -1, 9]
+      //console.log("vediamo se worka")
+      this.ArrayRemove(leftCheck, 9)
+      console.log(leftCheck)
+    },
+    ArrayRemove(arr, value) {
+      //console.log("arrayRemove")
+      for (var i = 0; i < arr.length; i++) {
+        if (arr[i] === value) {
+          arr.splice(i, 1);
+          i--;
+        }
+      }
+    },
   },
   mounted() {
     console.log("Grid mounted")
