@@ -23,17 +23,17 @@
         <!-- SHIPS -->
         <div class="col-6 ships">
           <div class="row">
-            <div class="col-1">
-              <h3>{{ nAirCarr }}x</h3>
+            <div class="col-1 ship-quantity">
+              <h3>{{ nCarr }}x</h3>
             </div>
             <div class="col-10">
-              <div class="row" id="Aircraft Carrier" @click="SelectShip">
+              <div class="row" id="Carrier" @click="SelectShip">
                 <div v-for="shipLength in 5" :key="shipLength" class="ship"></div>
               </div>
             </div>
           </div>
           <div class="row">
-            <div class="col-1">
+            <div class="col-1 ship-quantity">
               <h3>{{ nBatt }}x</h3>
             </div>
             <div class="col-10">
@@ -43,7 +43,7 @@
             </div>
           </div>
           <div class="row">
-            <div class="col-1">
+            <div class="col-1 ship-quantity">
               <h3>{{ nSub }}x</h3>
             </div>
             <div class="col-10">
@@ -53,7 +53,7 @@
             </div>
           </div>
           <div class="row">
-            <div class="col-1">
+            <div class="col-1 ship-quantity">
               <h3>{{ nCru }}x</h3>
             </div>
             <div class="col-10">
@@ -63,7 +63,7 @@
             </div>
           </div>
           <div class="row">
-            <div class="col-1">
+            <div class="col-1 ship-quantity">
               <h3>{{ nDest }}x</h3>
             </div>
             <div class="col-10">
@@ -88,7 +88,7 @@ export default {
     return {
       shipSelected: "",
       rotate: false,
-      nAirCarr: 1,
+      nCarr: 1,
       nBatt: 1,
       nSub: 1,
       nCru: 3,
@@ -130,7 +130,6 @@ export default {
       if (this.shipSelected != "" && !e.currentTarget.getAttribute('class').includes("busy") && this.ValidatePlacement(this.shipSelected, clickedPos, this.rotate)) {
         e.currentTarget.classList.add("busy")
         e.currentTarget.classList.remove("blue")
-
       }
       else if (this.shipSelected == "")
         console.log("You haven't selected a ship yet")
@@ -169,8 +168,8 @@ export default {
     GetShipLeft(_name) {
       console.log("Checking ships left for " + _name)
       switch (_name) {
-        case "Aircraft Carrier":
-          return this.nAirCarr
+        case "Carrier":
+          return this.nCarr
         case "Battleship":
           return this.nBatt
         case "Submarine":
@@ -184,7 +183,7 @@ export default {
     GetShipLength(_name) {
       console.log("Getting ships length for " + _name)
       switch (_name) {
-        case "Aircraft Carrier":
+        case "Carrier":
           return 5
         case "Battleship":
           return 4
@@ -201,9 +200,23 @@ export default {
         return false
       let length = this.GetShipLength(_ship)
       let pos = parseInt(_posToPlace)
+      let checkPosH = parseInt((_posToPlace / 10).toString().split(".")[1])
+      if(isNaN(checkPosH))
+        checkPosH = 0
+      let checkPosV = (_posToPlace - checkPosH) / 10
+      let checkHOrV = 10 - length
       console.log("Checking if " + _ship + " can be placed at " + pos + " with length " + length)
-      console.log("Valore posizione: " + parseInt((_posToPlace / 10).toString().split(".")[1]))
-      console.log("Valore controllo: " + (10 - length))
+      console.log("Position value on row: " + checkPosH)
+      console.log("Position value on col: " + checkPosV)
+      console.log("Control value: " + checkHOrV)
+      if (checkPosH > checkHOrV && _isVertical == false) {
+        console.log("Horizontal control, invalid position")
+        return false
+      }
+      if (checkPosV > checkHOrV && _isVertical == true) {
+        console.log("Vertical control, invalid position")
+        return false
+      }
       switch (length) {
         case 5:
           if (_isVertical) {
@@ -215,8 +228,6 @@ export default {
             return true
           }
           else {
-            if (parseInt((_posToPlace / 10).toString().split(".")[1]) > (10 - length))
-              return false
             for (let i = 0; i < this.carrierCheckHorizontal.length; i++) {
               if (this.grid[(pos + this.carrierCheckHorizontal[i])] != '-')
                 return false
@@ -299,7 +310,7 @@ export default {
           || (posToCheck < _posToPlace && posToCheck > _posToPlace + _lenght - 1 - 10)))
         console.log("Border right, position that does not need to be checked: " + (posToCheck))
     },
-    ArrayRemove(arr, value) {
+    /*ArrayRemove(arr, value) {
       //console.log("arrayRemove")
       for (var i = 0; i < arr.length; i++) {
         if (arr[i] === value) {
@@ -307,7 +318,7 @@ export default {
           i--;
         }
       }
-    },
+    },*/
   },
   mounted() {
     console.log("Grid mounted")
@@ -330,6 +341,9 @@ h3 {
   text-align: center;
   line-height: 2;
   user-select: none;
+}
+.ship-quantity{
+  margin-right: 0.6vw;
 }
 
 .blue {

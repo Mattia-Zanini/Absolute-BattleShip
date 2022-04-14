@@ -7,7 +7,7 @@ export function Game() {
     let shipName = "";
     let size = 0;
     if (i == 0) {
-      shipName = "Aircraft Carrier";
+      shipName = "Carrier";
       size = 5;
     }
     if (i == 1) {
