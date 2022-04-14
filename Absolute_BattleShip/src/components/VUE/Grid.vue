@@ -121,11 +121,13 @@ export default {
         return false
     },
     ClickTD(e) {
+      let clickedPos = parseInt(e.currentTarget.getAttribute('value'))
+      //console.log("clickedPos: " + typeof clickedPos)
       if (e.currentTarget.getAttribute('class') == "no-border")
         console.log("it isn't a valid cell")
       else
-        console.log("Clicked cell in pos: " + e.currentTarget.getAttribute('value'))
-      if (this.shipSelected != "" && !e.currentTarget.getAttribute('class').includes("busy") && this.ValidatePlacement(this.shipSelected, e.currentTarget.getAttribute('value'), this.rotate)) {
+        console.log("Clicked cell in pos: " + clickedPos)
+      if (this.shipSelected != "" && !e.currentTarget.getAttribute('class').includes("busy") && this.ValidatePlacement(this.shipSelected, clickedPos, this.rotate)) {
         e.currentTarget.classList.add("busy")
         e.currentTarget.classList.remove("blue")
 
@@ -136,7 +138,7 @@ export default {
         console.log("Cell already busy")
       /*console.log("Validate Placement: " + this.ValidatePlacement(this.shipSelected, e.currentTarget.getAttribute('value'), this.rotate))
       console.log("Class Busy: " + e.currentTarget.getAttribute('class').includes("busy"))*/
-      this.CleanCheck()
+      this.ValidateCheck(clickedPos, 5, this.rotate, -5)
     },
     GetPos(_row, _col) {
       _row = _row - 2
@@ -200,6 +202,8 @@ export default {
       let length = this.GetShipLength(_ship)
       let pos = parseInt(_posToPlace)
       console.log("Checking if " + _ship + " can be placed at " + pos + " with length " + length)
+      console.log("Valore posizione: " + parseInt((_posToPlace / 10).toString().split(".")[1]))
+      console.log("Valore controllo: " + (10 - length))
       switch (length) {
         case 5:
           if (_isVertical) {
@@ -211,6 +215,8 @@ export default {
             return true
           }
           else {
+            if (parseInt((_posToPlace / 10).toString().split(".")[1]) > (10 - length))
+              return false
             for (let i = 0; i < this.carrierCheckHorizontal.length; i++) {
               if (this.grid[(pos + this.carrierCheckHorizontal[i])] != '-')
                 return false
@@ -270,11 +276,28 @@ export default {
           return true
       }
     },
-    CleanCheck() {
-      let leftCheck = [-11, -1, 9]
+    ValidateCheck(_posToPlace, _lenght, _isVertical, _check) {
+      /*let leftCheck = [-11, -1, 9]
       //console.log("vediamo se worka")
       this.ArrayRemove(leftCheck, 9)
-      console.log(leftCheck)
+      console.log(leftCheck)*/
+      let posToCheck = _posToPlace + _check
+      console.log("Position to check: " + posToCheck)
+      console.log("Position + Length: " + (_posToPlace + _lenght))
+      if (posToCheck < 0 || posToCheck > 99)
+        //return false
+        console.log("Out of bounds " + (posToCheck))
+      //LEFT
+      else if (_posToPlace % 10 == 0 &&
+        ((posToCheck < _posToPlace && posToCheck != _posToPlace - 10)
+          || (posToCheck > _posToPlace && posToCheck != _posToPlace + 10)))
+        //return false
+        console.log("Border left, position that does not need to be checked: " + (posToCheck))
+      //RIGHT
+      else if ((_posToPlace + _lenght) % 10 == 0 &&
+        ((posToCheck > _posToPlace && posToCheck > _posToPlace + _lenght - 1)
+          || (posToCheck < _posToPlace && posToCheck > _posToPlace + _lenght - 1 - 10)))
+        console.log("Border right, position that does not need to be checked: " + (posToCheck))
     },
     ArrayRemove(arr, value) {
       //console.log("arrayRemove")
