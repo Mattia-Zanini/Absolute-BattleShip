@@ -22,8 +22,8 @@ const alreadyMounted = false;
         @exitPreGame="showMenu"
         :rowIndicators="rIndi"
         :grid="giocatore.grid"
-        :player="giocatore"
         :aldMntd="alreadyMounted"
+        @update-grid="updateGrid"
       />
     </div>
   </div>
@@ -50,6 +50,15 @@ export default {
       if (_value == 0)
         this.alreadyMounted = true;
     },
+    updateGrid(_pos, _ship, _length,_orientation){
+      console.log("Grid updated");
+      let orient = _orientation == true ? "Vertical" : "Horizontal";
+      console.log("Insert ship with this value: \nPosition: " + _pos + "\nShip: " + _ship + "\nLenght: " + _length + "\nOrientation: " + orient);
+      for(let i = 0; i < _length; i++){
+        this.giocatore.grid[_pos + i] = 's';
+      }
+      console.log(this.giocatore.grid)
+    }
   },
 
   // Lifecycle hooks are called at different stages

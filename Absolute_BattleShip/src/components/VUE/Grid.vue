@@ -83,7 +83,7 @@
 
 <script>
 export default {
-  props: ['rowIndicators', 'grid', 'player', 'aldMntd'],
+  props: ['rowIndicators', 'grid', 'aldMntd'],
   data() {
     return {
       shipSelected: "",
@@ -122,23 +122,34 @@ export default {
     },
     ClickTD(e) {
       let clickedPos = parseInt(e.currentTarget.getAttribute('value'))
+      let validate
       //console.log("clickedPos: " + typeof clickedPos)
-      if (e.currentTarget.getAttribute('class') == "no-border")
+      if (e.currentTarget.getAttribute('class') == "no-border") {
         console.log("it isn't a valid cell")
+        validate = false
+      }
       else
         console.log("Clicked cell in pos: " + clickedPos)
-      if (this.shipSelected != "" && !e.currentTarget.getAttribute('class').includes("busy") && this.ValidatePlacement(this.shipSelected, clickedPos, this.rotate)) {
-        e.currentTarget.classList.add("busy")
-        e.currentTarget.classList.remove("blue")
+      if (this.shipSelected != "" && !e.currentTarget.getAttribute('class').includes("busy")) {
+        if (this.ValidatePlacement(this.shipSelected, clickedPos, this.rotate)) {
+          e.currentTarget.classList.add("busy")
+          e.currentTarget.classList.remove("blue")
+          validate = true
+        }
+        else
+          validate = false
       }
-      else if (this.shipSelected == "")
+      else if (this.shipSelected == "") {
         console.log("You haven't selected a ship yet")
-      else
+        validate = false
+      }
+      else {
         console.log("Cell already busy")
-      /*console.log("Validate Placement: " + this.ValidatePlacement(this.shipSelected, e.currentTarget.getAttribute('value'), this.rotate))
-      console.log("Class Busy: " + e.currentTarget.getAttribute('class').includes("busy"))*/
-      //FOR TEST
-      this.ValidateCheck(clickedPos, 5, this.rotate, 1)
+        validate = false
+      }
+      console.log("CHECKING RESULT: " + validate)
+      if (validate == true)
+        this.$emit('update-grid', clickedPos, this.shipSelected, this.GetShipLength(this.shipSelected), this.rotate)
     },
     GetPos(_row, _col) {
       _row = _row - 2
@@ -223,7 +234,7 @@ export default {
           if (_isVertical) {
             for (let i = 0; i < this.carrierCheckVertical.length; i++) {
               console.log("Checking pos: " + (this.carrierCheckVertical[i] + pos))
-              if (this.grid[(pos + this.carrierCheckVertical[i])] != '-')
+              if (this.grid[this.ValidateCheck(pos, length, this.rotate, this.carrierCheckVertical[i])] != '-')
                 return false
             }
             return true
@@ -231,7 +242,7 @@ export default {
           else {
             for (let i = 0; i < this.carrierCheckHorizontal.length; i++) {
               console.log("Checking pos: " + (this.carrierCheckHorizontal[i] + pos))
-              if (this.grid[(pos + this.carrierCheckHorizontal[i])] != '-')
+              if (this.grid[this.ValidateCheck(pos, length, this.rotate, this.carrierCheckHorizontal[i])] != '-')
                 return false
             }
             return true
@@ -239,14 +250,16 @@ export default {
         case 4:
           if (_isVertical) {
             for (let i = 0; i < this.battleshipCheckVertical.length; i++) {
-              if (this.grid[(pos + this.battleshipCheckVertical[i])] != '-')
+              console.log("Checking pos: " + (this.battleshipCheckVertical[i] + pos))
+              if (this.grid[this.ValidateCheck(pos, length, this.rotate, this.battleshipCheckVertical[i])] != '-')
                 return false
             }
             return true
           }
           else {
             for (let i = 0; i < this.battleshipCheckHorizontal.length; i++) {
-              if (this.grid[(pos + this.battleshipCheckHorizontal[i])] != '-')
+              console.log("Checking pos: " + (this.battleshipCheckHorizontal[i] + pos))
+              if (this.grid[this.ValidateCheck(pos, length, this.rotate, this.battleshipCheckHorizontal[i])] != '-')
                 return false
             }
             return true
@@ -254,14 +267,16 @@ export default {
         case 3:
           if (_isVertical) {
             for (let i = 0; i < this.submarineCheckVertical.length; i++) {
-              if (this.grid[(pos + this.submarineCheckVertical[i])] != '-')
+              console.log("Checking pos: " + (this.submarineCheckVertical[i] + pos))
+              if (this.grid[this.ValidateCheck(pos, length, this.rotate, this.submarineCheckVertical[i])] != '-')
                 return false
             }
             return true
           }
           else {
             for (let i = 0; i < this.submarineCheckHorizontal.length; i++) {
-              if (this.grid[(pos + this.submarineCheckHorizontal[i])] != '-')
+              console.log("Checking pos: " + (this.submarineCheckHorizontal[i] + pos))
+              if (this.grid[this.ValidateCheck(pos, length, this.rotate, this.submarineCheckHorizontal[i])] != '-')
                 return false
             }
             return true
@@ -269,66 +284,62 @@ export default {
         case 2:
           if (_isVertical) {
             for (let i = 0; i < this.cruiserCheckVertical.length; i++) {
-              if (this.grid[(pos + this.cruiserCheckVertical[i])] != '-')
+              console.log("Checking pos: " + (this.cruiserCheckVertical[i] + pos))
+              if (this.grid[this.ValidateCheck(pos, length, this.rotate, this.cruiserCheckVertical[i])] != '-')
                 return false
             }
             return true
           }
           else {
             for (let i = 0; i < this.cruiserCheckHorizontal.length; i++) {
-              if (this.grid[(pos + this.cruiserCheckHorizontal[i])] != '-')
+              console.log("Checking pos: " + (this.cruiserCheckHorizontal[i] + pos))
+              if (this.grid[this.ValidateCheck(pos, length, this.rotate, this.cruiserCheckHorizontal[i])] != '-')
                 return false
             }
             return true
           }
         case 1:
           for (let i = 0; i < this.destroyerCheck.length; i++) {
-            if (this.grid[(pos + this.destroyerCheck[i])] != '-')
+            console.log("Checking pos: " + (this.destroyerCheck[i] + pos))
+            if (this.grid[this.ValidateCheck(pos, length, this.rotate, this.destroyerCheck[i])] != '-')
               return false
           }
           return true
       }
     },
     ValidateCheck(_posToPlace, _lenght, _isVertical, _check) {
-      /*let leftCheck = [-11, -1, 9]
-      //console.log("vediamo se worka")
-      this.ArrayRemove(leftCheck, 9)
-      console.log(leftCheck)*/
+      console.log("Validating position: " + _posToPlace + " with check: " + _check)
       let posToCheck = _posToPlace + _check
       console.log("Position to check: " + posToCheck)
       console.log("Position + Length: " + (_posToPlace + _lenght))
       //OUT OF THE GRID
-      if (posToCheck < 0 || posToCheck > 99)
-        //return false
+      if (posToCheck < 0 || posToCheck > 99) {
         console.log("Out of bounds " + (posToCheck))
-      //LEFT
-      if (_posToPlace % 10 == 0 && posToCheck % 10 == 9)
-        //return false
+        return _posToPlace
+      }
+      //LEFT Horizontal & Vertical
+      if (_posToPlace % 10 == 0 && posToCheck % 10 == 9) {
         console.log("Border left, position that does not need to be checked: " + (posToCheck))
+        return _posToPlace
+      }
       //HORIZONTAL
       if (_isVertical == false) {
         //RIGHT
-        if ((_posToPlace + _lenght) % 10 == 0 && posToCheck % 10 == 0)
-          //return false
+        if ((_posToPlace + _lenght) % 10 == 0 && posToCheck % 10 == 0) {
           console.log("Border right horizontal, position that does not need to be checked: " + (posToCheck))
+          return _posToPlace
+        }
       }
       //VERTICAL
       else {
         //RIGHT
-        if (_posToPlace % 10 == 9 && posToCheck % 10 == 0)
-          //return false
+        if (_posToPlace % 10 == 9 && posToCheck % 10 == 0) {
           console.log("Border right vertical, position that does not need to be checked: " + (posToCheck))
-      }
-    },
-    /*ArrayRemove(arr, value) {
-      //console.log("arrayRemove")
-      for (var i = 0; i < arr.length; i++) {
-        if (arr[i] === value) {
-          arr.splice(i, 1);
-          i--;
+          return _posToPlace
         }
       }
-    },*/
+      return posToCheck
+    },
   },
   mounted() {
     console.log("Grid mounted")
