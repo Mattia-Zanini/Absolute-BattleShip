@@ -137,7 +137,8 @@ export default {
         console.log("Cell already busy")
       /*console.log("Validate Placement: " + this.ValidatePlacement(this.shipSelected, e.currentTarget.getAttribute('value'), this.rotate))
       console.log("Class Busy: " + e.currentTarget.getAttribute('class').includes("busy"))*/
-      this.ValidateCheck(clickedPos, 5, this.rotate, -5)
+      //FOR TEST
+      this.ValidateCheck(clickedPos, 5, this.rotate, 1)
     },
     GetPos(_row, _col) {
       _row = _row - 2
@@ -201,7 +202,7 @@ export default {
       let length = this.GetShipLength(_ship)
       let pos = parseInt(_posToPlace)
       let checkPosH = parseInt((_posToPlace / 10).toString().split(".")[1])
-      if(isNaN(checkPosH))
+      if (isNaN(checkPosH))
         checkPosH = 0
       let checkPosV = (_posToPlace - checkPosH) / 10
       let checkHOrV = 10 - length
@@ -229,6 +230,7 @@ export default {
           }
           else {
             for (let i = 0; i < this.carrierCheckHorizontal.length; i++) {
+              console.log("Checking pos: " + (this.carrierCheckHorizontal[i] + pos))
               if (this.grid[(pos + this.carrierCheckHorizontal[i])] != '-')
                 return false
             }
@@ -295,20 +297,28 @@ export default {
       let posToCheck = _posToPlace + _check
       console.log("Position to check: " + posToCheck)
       console.log("Position + Length: " + (_posToPlace + _lenght))
+      //OUT OF THE GRID
       if (posToCheck < 0 || posToCheck > 99)
         //return false
         console.log("Out of bounds " + (posToCheck))
       //LEFT
-      else if (_posToPlace % 10 == 0 &&
-        ((posToCheck < _posToPlace && posToCheck != _posToPlace - 10)
-          || (posToCheck > _posToPlace && posToCheck != _posToPlace + 10)))
+      if (_posToPlace % 10 == 0 && posToCheck % 10 == 9)
         //return false
         console.log("Border left, position that does not need to be checked: " + (posToCheck))
-      //RIGHT
-      else if ((_posToPlace + _lenght) % 10 == 0 &&
-        ((posToCheck > _posToPlace && posToCheck > _posToPlace + _lenght - 1)
-          || (posToCheck < _posToPlace && posToCheck > _posToPlace + _lenght - 1 - 10)))
-        console.log("Border right, position that does not need to be checked: " + (posToCheck))
+      //HORIZONTAL
+      if (_isVertical == false) {
+        //RIGHT
+        if ((_posToPlace + _lenght) % 10 == 0 && posToCheck % 10 == 0)
+          //return false
+          console.log("Border right horizontal, position that does not need to be checked: " + (posToCheck))
+      }
+      //VERTICAL
+      else {
+        //RIGHT
+        if (_posToPlace % 10 == 9 && posToCheck % 10 == 0)
+          //return false
+          console.log("Border right vertical, position that does not need to be checked: " + (posToCheck))
+      }
     },
     /*ArrayRemove(arr, value) {
       //console.log("arrayRemove")
@@ -342,7 +352,8 @@ h3 {
   line-height: 2;
   user-select: none;
 }
-.ship-quantity{
+
+.ship-quantity {
   margin-right: 0.6vw;
 }
 
