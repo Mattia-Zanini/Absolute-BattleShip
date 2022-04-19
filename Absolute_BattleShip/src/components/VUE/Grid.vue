@@ -27,7 +27,7 @@
             <div class="col-1 ship-quantity">
               <h3>{{ nCarr }}x</h3>
             </div>
-            <div class="col-10">
+            <div class="col-5">
               <div class="row" id="Carrier" @click="SelectShip">
                 <div v-for="shipLength in 5" :key="shipLength" class="ship"></div>
               </div>
@@ -37,7 +37,7 @@
             <div class="col-1 ship-quantity">
               <h3>{{ nBatt }}x</h3>
             </div>
-            <div class="col-10">
+            <div class="col-4">
               <div class="row" id="Battleship" @click="SelectShip">
                 <div v-for="shipLength in 4" :key="shipLength" class="ship"></div>
               </div>
@@ -47,7 +47,7 @@
             <div class="col-1 ship-quantity">
               <h3>{{ nSub }}x</h3>
             </div>
-            <div class="col-10">
+            <div class="col-3">
               <div class="row" id="Submarine" @click="SelectShip">
                 <div v-for="shipLength in 3" :key="shipLength" class="ship"></div>
               </div>
@@ -57,7 +57,7 @@
             <div class="col-1 ship-quantity">
               <h3>{{ nCru }}x</h3>
             </div>
-            <div class="col-10">
+            <div class="col-2">
               <div class="row" id="Cruiser" @click="SelectShip">
                 <div v-for="shipLength in 2" :key="shipLength" class="ship"></div>
               </div>
@@ -67,18 +67,22 @@
             <div class="col-1 ship-quantity">
               <h3>{{ nDest }}x</h3>
             </div>
-            <div class="col-10">
+            <div class="col-1">
               <div class="row" id="Destroyer" @click="SelectShip">
                 <div class="ship"></div>
               </div>
             </div>
           </div>
-          <div class="row">
-            <div class="col-2 rotate-icon" :class="{ 'vertical': this.rotate, 'horizontal': !this.rotate }">
+          <div class="row navigation-section">
+            <div class="col-1 rotate-icon" :class="{ 'vertical': this.rotate, 'horizontal': !this.rotate }">
               <h1 class="orientation-text">{{ rot }}</h1>
             </div>
-            <div class="col-10"><button class="btn btn-style"
-                @click="$emit('exitPreGame', 0, this.RotateListener)">Esci</button></div>
+            <div class="col-5">
+              <button class="btn btn-style" @click="$emit('exitPreGame', 0, this.RotateListener)">Esci</button>
+            </div>
+            <div class="col-5">
+              <button class="btn btn-style" @click="$emit('exitPreGame', 3, this.RotateListener)">Inizia</button>
+            </div>
           </div>
         </div>
       </div>
@@ -420,6 +424,7 @@ h3 {
 
 .ship-quantity {
   margin-right: 0.6vw;
+  margin-bottom: 1vw;
 }
 
 .blue {
@@ -434,7 +439,7 @@ h3 {
 .selected {
   outline: 0.2vw solid yellow !important;
   height: 3vw !important;
-  margin-bottom: 4.13% !important;
+  /*margin-bottom: 4.13% !important;*/
 }
 
 .selected-5 {
@@ -463,13 +468,15 @@ h3 {
 
 .btn-style {
   height: 7.5vw;
+  width: 14vw !important;
+  font-size: 3vw !important;
 }
 
 .rotate-icon {
   height: 5vw;
   width: 5vw;
   margin-top: 2vw;
-  margin-left: 2vw;
+  margin-left: 1.4vw;
 }
 
 .vertical {
@@ -480,6 +487,10 @@ h3 {
 .horizontal {
   background-color: #2ae219;
   border: 0.3vw solid #0f7e21;
+}
+
+.navigation-section {
+  margin-top: 2vw;
 }
 </style>
 
