@@ -11,7 +11,8 @@
                   { 'no-border': row == 1 || col == 1 },
                   { 'grid-border': row != 1 && col != 1 },
                   { 'blue': EmptyTD('-', row, col) },
-                ]" :value="GetPos(row, col)" @click="ClickTD">
+                  { 'busy': EmptyTD('s', row, col) },
+                ]" :id="GetPos(row, col)" :value="GetPos(row, col)" @click="ClickTD">
                   <!--row:{{ row }} col:{{ col }}-->
                   <div class="indicator" v-if="col == 1 && row != 1">{{ rowIndicators[row - 2] }}</div>
                   <div class="indicator" v-if="col != 1 && row == 1">{{ col - 1 }}</div>
@@ -73,7 +74,11 @@
             </div>
           </div>
           <div class="row">
-            <button class="btn btn-style" @click="$emit('exitPreGame', 0)">Esci</button>
+            <div class="col-2 rotate-icon" :class="{ 'vertical': this.rotate, 'horizontal': !this.rotate }">
+              <h1 class="orientation-text">{{ rot }}</h1>
+            </div>
+            <div class="col-10"><button class="btn btn-style"
+                @click="$emit('exitPreGame', 0, this.RotateListener)">Esci</button></div>
           </div>
         </div>
       </div>
@@ -83,11 +88,12 @@
 
 <script>
 export default {
-  props: ['rowIndicators', 'grid', 'aldMntd'],
+  props: ['rowIndicators', 'grid'],
   data() {
     return {
       shipSelected: "",
       rotate: false,
+      rot: "H",
       nCarr: 1,
       nBatt: 1,
       nSub: 1,
@@ -102,7 +108,7 @@ export default {
       cruiserCheckHorizontal: [-11, -10, -9, -8, -1, 0, 1, 2, 9, 10, 11, 12],
       cruiserCheckVertical: [-11, -10, -9, -1, 0, 1, 9, 10, 11, 19, 20, 21],
       destroyerCheck: [-11, -10, -9, -1, 0, 1, 9, 10, 11],
-    };
+    }
   },
   methods: {
     EmptyTD(_value, _row, _col) {
@@ -128,28 +134,50 @@ export default {
         console.log("it isn't a valid cell")
         validate = false
       }
-      else
-        console.log("Clicked cell in pos: " + clickedPos)
-      if (this.shipSelected != "" && !e.currentTarget.getAttribute('class').includes("busy")) {
-        if (this.ValidatePlacement(this.shipSelected, clickedPos, this.rotate)) {
-          e.currentTarget.classList.add("busy")
-          e.currentTarget.classList.remove("blue")
-          validate = true
-        }
-        else
-          validate = false
-      }
-      else if (this.shipSelected == "") {
-        console.log("You haven't selected a ship yet")
-        validate = false
-      }
       else {
-        console.log("Cell already busy")
-        validate = false
+        console.log("Clicked cell in pos: " + clickedPos)
+        if (this.shipSelected != "" && !e.currentTarget.getAttribute('class').includes("busy")) {
+          if (this.ValidatePlacement(this.shipSelected, clickedPos, this.rotate)) {
+            e.currentTarget.classList.add("busy")
+            e.currentTarget.classList.remove("blue")
+            validate = true
+          }
+          else
+            validate = false
+        }
+        else if (this.shipSelected == "") {
+          console.log("You haven't selected a ship yet")
+          validate = false
+        }
+        else {
+          console.log("Cell already busy")
+          validate = false
+        }
       }
       console.log("CHECKING RESULT: " + validate)
-      if (validate == true)
-        this.$emit('update-grid', clickedPos, this.shipSelected, this.GetShipLength(this.shipSelected), this.rotate)
+      if (validate == true) {
+        let shipLength = this.GetShipLength(this.shipSelected)
+        this.DecreaseShips(this.shipSelected)
+        this.$emit('update-grid', clickedPos, this.shipSelected, shipLength, this.rotate)
+        for (let i = 0; i < shipLength; i++) {
+          let shipPos
+          if (this.rotate == false)
+            shipPos = clickedPos + i
+          else
+            shipPos = clickedPos + i * 10
+          var shipElement = document.getElementById(shipPos);
+          console.log("ship's element id: " + shipElement.id)
+          shipElement.classList.add("busy")
+          shipElement.classList.remove("blue")
+        }
+        if (this.GetShipLeft(this.shipSelected) == 0) {
+          var ship = document.getElementById(this.shipSelected);
+          ship.classList.remove('selected-' + this.GetShipLength(ship))
+          ship.classList.remove('selected')
+          console.log("Deselected: " + this.shipSelected)
+          this.shipSelected = ""
+        }
+      }
     },
     GetPos(_row, _col) {
       _row = _row - 2
@@ -160,8 +188,6 @@ export default {
     SelectShip(e) {
       let classes = e.currentTarget.getAttribute('class')
       let ship = e.currentTarget.getAttribute('id')
-      /*let prova = this.wow(name)
-      console.log("vediamo se funzia " + prova)*/
       console.log("Clicked: " + ship)
       if (classes.includes("selected") && this.shipSelected != "") {
         e.currentTarget.classList.remove('selected-' + this.GetShipLength(ship))
@@ -340,19 +366,42 @@ export default {
       }
       return posToCheck
     },
+    RotateListener(e) {
+      let key = String.fromCharCode(e.keyCode)
+      if (key == 'r') {
+        this.rotate = !this.rotate
+        console.log("Key pressed: " + key + ", rotate value: " + this.rotate);
+        if (this.rotate)
+          this.rot = "V"
+        else
+          this.rot = "H"
+      }
+    },
+    DecreaseShips(_name) {
+      console.log("Decreasing ship: " + _name)
+      switch (_name) {
+        case "Carrier":
+          this.nCarr--
+          break
+        case "Battleship":
+          this.nBatt--
+          break
+        case "Submarine":
+          this.nSub--
+          break
+        case "Cruiser":
+          this.nCru--
+          break
+        case "Destroyer":
+          this.nDest--
+          break
+      }
+    },
   },
   mounted() {
     console.log("Grid mounted")
-    console.log("EventListener already mounted: " + this.aldMntd)
-    if (!this.aldMntd) {
-      window.addEventListener("keypress", e => {
-        let key = String.fromCharCode(e.keyCode)
-        if (key == 'r') {
-          this.rotate = !this.rotate
-          console.log("Key pressed: " + key + ", rotate value: " + this.rotate);
-        }
-      });
-    }
+    console.log("EventListener mounted")
+    window.addEventListener("keypress", this.RotateListener)
   },
 };
 </script>
@@ -362,6 +411,11 @@ h3 {
   text-align: center;
   line-height: 2;
   user-select: none;
+}
+
+.orientation-text {
+  line-height: 4vw;
+  text-align: center;
 }
 
 .ship-quantity {
@@ -405,6 +459,27 @@ h3 {
 
 .busy {
   background-color: #727980;
+}
+
+.btn-style {
+  height: 7.5vw;
+}
+
+.rotate-icon {
+  height: 5vw;
+  width: 5vw;
+  margin-top: 2vw;
+  margin-left: 2vw;
+}
+
+.vertical {
+  background-color: #e21919;
+  border: 0.3vw solid #7e0f0f;
+}
+
+.horizontal {
+  background-color: #2ae219;
+  border: 0.3vw solid #0f7e21;
 }
 </style>
 

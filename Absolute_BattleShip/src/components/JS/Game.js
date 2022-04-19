@@ -32,18 +32,3 @@ export function Game() {
   console.log(giocatore);
   console.log(bot);
 }
-
-/*export function makeGrid() {
-  var grid = document.getElementById("grid");
-  console.log(grid);
-  var table = document.createElement("table");
-  console.log(table);
-  for (let i = 0; i < 11; i++) {
-    const thr = document.createElement("td");
-    thr.classList.add("square");
-    thr.textContent = i;
-    table.appendChild(thr);
-  }
-  grid.appendChild(table);
-}
-*/

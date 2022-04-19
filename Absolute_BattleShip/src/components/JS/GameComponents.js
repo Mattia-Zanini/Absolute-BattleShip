@@ -3,15 +3,15 @@ export class Ship {
   name;
   Length;
   isVertical;
-  isSelected;
   placed;
+  positions;
   constructor(_id, _name, _Length) {
     this.id = _id;
     this.name = _name;
     this.Length = _Length;
     this.isVertical = false;
-    this.isSelected = false;
     this.placed = false;
+    this.positions = [];
   }
 }
 // - nothing
@@ -40,7 +40,7 @@ export class Player {
     this.grid = [
   '-', '-', '-', '-', '-', '-', '-', '-', '-', '-',
   '-', '-', '-', '-', '-', '-', '-', '-', '-', '-',
-  's', '-', '-', '-', '-', '-', '-', '-', '-', '-',
+  '-', '-', '-', '-', '-', '-', '-', '-', '-', '-',
   '-', '-', '-', '-', '-', '-', '-', '-', '-', '-',
   '-', '-', '-', '-', '-', '-', '-', '-', '-', '-',
   '-', '-', '-', '-', '-', '-', '-', '-', '-', '-',
@@ -61,7 +61,13 @@ export class Player {
   get NumberOfShips() {
     return this.ships.length;
   }
-  StartGrid() {
+  ResetGrid() { 
+    this.grid.length = 0;
     for (let i = 0; i < 100; i++) this.grid.push("-");
+    console.log("Resetting grid");
+    //console.log(this.grid);
   }
+  /*StartGrid() {
+    for (let i = 0; i < 100; i++) this.grid.push("-");
+  }*/
 }

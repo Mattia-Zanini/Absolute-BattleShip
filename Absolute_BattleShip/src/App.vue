@@ -2,7 +2,6 @@
 import { Game, giocatore, bot } from "./components/JS/Game.js";
 Game();
 const rIndi = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
-const alreadyMounted = false;
 </script>
 
 <template>
@@ -18,13 +17,7 @@ const alreadyMounted = false;
       <DetailGame @hideRules="showMenu" />
     </div>
     <div v-if="show == 2" class="row d-flex justify-content-center zoomin">
-      <Grid
-        @exitPreGame="showMenu"
-        :rowIndicators="rIndi"
-        :grid="giocatore.grid"
-        :aldMntd="alreadyMounted"
-        @update-grid="updateGrid"
-      />
+      <Grid @exitPreGame="showMenu" :rowIndicators="rIndi" :grid="giocatore.grid" @update-grid="updateGrid" />
     </div>
   </div>
 </template>
@@ -44,20 +37,57 @@ export default {
   // Methods are functions that mutate state and trigger updates.
   // They can be bound as event listeners in templates.
   methods: {
-    showMenu(_value) {
+    showMenu(_value, _handler) {
       this.show = _value;
       console.log("This is show's value: " + this.show);
-      if (_value == 0)
-        this.alreadyMounted = true;
+      if (_value == 0) {
+        this.giocatore.ResetGrid();
+        console.log("EventListener removed: " + _handler);
+        window.removeEventListener("keypress", _handler)
+
+        for(let i = 0; i < this.giocatore.NumberOfShips; i++) {
+          this.giocatore.ships[i].isVertical = false;
+          this.giocatore.ships[i].placed = false;
+          this.giocatore.ships[i].positions.length = 0;
+        }
+        //console.log(this.giocatore.ships)
+      }
     },
-    updateGrid(_pos, _ship, _length,_orientation){
+    updateGrid(_pos, _ship, _length, _orientation) {
       console.log("Grid updated");
       let orient = _orientation == true ? "Vertical" : "Horizontal";
       console.log("Insert ship with this value: \nPosition: " + _pos + "\nShip: " + _ship + "\nLenght: " + _length + "\nOrientation: " + orient);
-      for(let i = 0; i < _length; i++){
-        this.giocatore.grid[_pos + i] = 's';
+
+      console.log("Updating for " + _ship)
+      let ship = this.FindShip(_ship);
+      console.log("Ship find in pos " + ship)
+      this.giocatore.ships[ship].isVertical = _orientation;
+      this.giocatore.ships[ship].placed = true;
+
+      if (_orientation == false) {
+        for (let i = 0; i < _length; i++) {
+          this.giocatore.grid[_pos + i] = 's';
+          this.giocatore.ships[ship].positions.push(_pos + i);
+        }
+      }
+      else {
+        for (let i = 0; i < _length; i++) {
+          this.giocatore.grid[_pos + i * 10] = 's';
+          this.giocatore.ships[ship].positions.push(_pos + i * 10);
+        }
       }
       console.log(this.giocatore.grid)
+      console.log("Ship updated:")
+      console.log(this.giocatore.ships[ship])
+    },
+    FindShip(_name) {
+      console.log("Finding ship")
+      for (let i = 0; i < this.giocatore.NumberOfShips; i++) {
+        if (this.giocatore.ships[i].name == _name && this.giocatore.ships[i].placed == false) {
+          console.log("Finding ship: success")
+          return i;
+        }
+      }
     }
   },
 
