@@ -242,10 +242,11 @@ export default {
         return false
       let length = this.GetShipLength(_ship)
       let pos = parseInt(_posToPlace)
-      let checkPosH = parseInt((_posToPlace / 10).toString().split(".")[1])
+      /*let checkPosH = parseInt((_posToPlace / 10).toString().split(".")[1])
       if (isNaN(checkPosH))
-        checkPosH = 0
-      let checkPosV = (_posToPlace - checkPosH) / 10
+        checkPosH = 0*/
+      let checkPosH = pos % 10
+      let checkPosV = (pos - checkPosH) / 10
       let checkHOrV = 10 - length
       console.log("Checking if " + _ship + " can be placed at " + pos + " with length " + length)
       console.log("Position value on row: " + checkPosH)

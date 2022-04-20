@@ -30,21 +30,12 @@ export default {
     props: ['rowIndicators', 'bot'],
     data() {
         return {
-            carrierCheckHorizontal: [-11, -10, -9, -8, -7, -6, -5, -1, 0, 1, 2, 3, 4, 5, 9, 10, 11, 12, 13, 14, 15],
-            carrierCheckVertical: [-11, -10, -9, -1, 0, 1, 9, 10, 11, 19, 20, 21, 29, 30, 31, 39, 40, 41, 49, 50, 51],
-            battleshipCheckHorizontal: [-11, -10, -9, -8, -7, -6, -1, 0, 1, 2, 3, 4, 9, 10, 11, 12, 13, 14],
-            battleshipCheckVertical: [-11, -10, -9, -1, 0, 1, 9, 10, 11, 19, 20, 21, 29, 30, 31, 39, 40, 41],
-            submarineCheckHorizontal: [-11, -10, -9, -8, -7, -1, 0, 1, 2, 3, 9, 10, 11, 12, 13],
-            submarineCheckVertical: [-11, -10, -9, -1, 0, 1, 9, 10, 11, 19, 20, 21, 29, 30, 31],
-            cruiserCheckHorizontal: [-11, -10, -9, -8, -1, 0, 1, 2, 9, 10, 11, 12],
-            cruiserCheckVertical: [-11, -10, -9, -1, 0, 1, 9, 10, 11, 19, 20, 21],
-            destroyerCheck: [-11, -10, -9, -1, 0, 1, 9, 10, 11],
         }
     },
     methods: {
     },
     mounted() {
-        console.log(this.bot)
+        //console.log(this.bot)
         this.bot.RandomStart()
     },
 };
