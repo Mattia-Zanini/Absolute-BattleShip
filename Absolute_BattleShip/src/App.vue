@@ -1,6 +1,6 @@
 <script setup>
-import { Game, giocatore, bot } from "./components/JS/Game.js";
-Game();
+import { StartGame, giocatore, bot } from "./components/JS/Game.js";
+StartGame();
 const rIndi = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
 </script>
 
@@ -19,6 +19,9 @@ const rIndi = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
     <div v-if="show == 2" class="row d-flex justify-content-center zoomin">
       <Grid @exitPreGame="showMenu" :rowIndicators="rIndi" :grid="giocatore.grid" @update-grid="updateGrid" />
     </div>
+    <div v-if="show == 3" class="row d-flex justify-content-center zoomin">
+      <Game :rowIndicators="rIndi" :bot="bot" />
+    </div>
   </div>
 </template>
 
@@ -26,6 +29,7 @@ const rIndi = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
 import DetailGame from "./components/VUE/DetailGame.vue";
 import Grid from "./components/VUE/Grid.vue";
 import GameMenu from "./components/VUE/GameMenu.vue";
+import Game from "./components/VUE/Game.vue";
 export default {
   // Properties returned from data() becomes reactive state
   // and will be exposed on `this`.
@@ -45,7 +49,7 @@ export default {
         console.log("EventListener removed: " + _handler);
         window.removeEventListener("keypress", _handler)
 
-        for(let i = 0; i < this.giocatore.NumberOfShips; i++) {
+        for (let i = 0; i < this.giocatore.NumberOfShips; i++) {
           this.giocatore.ships[i].isVertical = false;
           this.giocatore.ships[i].placed = false;
           this.giocatore.ships[i].positions.length = 0;

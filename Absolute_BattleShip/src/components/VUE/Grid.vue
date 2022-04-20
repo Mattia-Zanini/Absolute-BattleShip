@@ -10,8 +10,8 @@
                 <td v-for="col in 11" :key="col" :class="[
                   { 'no-border': row == 1 || col == 1 },
                   { 'grid-border': row != 1 && col != 1 },
-                  { 'blue': EmptyTD('-', row, col) },
-                  { 'busy': EmptyTD('s', row, col) },
+                  { 'blue': CellType('-', row, col) },
+                  { 'busy': CellType('s', row, col) },
                 ]" :id="GetPos(row, col)" :value="GetPos(row, col)" @click="ClickTD">
                   <!--row:{{ row }} col:{{ col }}-->
                   <div class="indicator" v-if="col == 1 && row != 1">{{ rowIndicators[row - 2] }}</div>
@@ -115,7 +115,7 @@ export default {
     }
   },
   methods: {
-    EmptyTD(_value, _row, _col) {
+    CellType(_value, _row, _col) {
       if (_row == 1 || _col == 1)
         return false
       _row = _row - 2
@@ -475,7 +475,7 @@ h3 {
 .rotate-icon {
   height: 5vw;
   width: 5vw;
-  margin-top: 2vw;
+  margin-top: 1.5vw;
   margin-left: 1.4vw;
 }
 
@@ -493,21 +493,3 @@ h3 {
   margin-top: 2vw;
 }
 </style>
-
-<!--
-<tbody>
-    <tr v-for="row in grid">
-        <td v-for="cell in row" @click="cellClicked(cell)" :class="cell.class">
-            <span v-if="cell.ship">
-                <i class="fas fa-ship"></i>
-            </span>
-            <span v-if="cell.miss">
-                <i class="fas fa-times"></i>
-            </span>
-            <span v-if="cell.hit">
-                <i class="fas fa-bomb"></i>
-            </span>
-        </td>
-    </tr>
-</tbody>
--->

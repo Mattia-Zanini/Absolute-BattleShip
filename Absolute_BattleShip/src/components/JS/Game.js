@@ -1,7 +1,7 @@
 import { Player } from "./GameComponents.js";
 export const giocatore = new Player("Giocatore");
 export const bot = new Player("BOT");
-export function Game() {
+export function StartGame() {
   // create 10 ships for each player
   for (let i = 0; i < 10; i++) {
     let shipName = "";
