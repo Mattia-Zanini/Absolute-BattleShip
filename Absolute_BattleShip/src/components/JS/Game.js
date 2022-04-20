@@ -32,3 +32,9 @@ export function StartGame() {
   console.log(giocatore);
   console.log(bot);
 }
+export function AdjustCellValue(_row, _col) {
+  _row = _row - 2
+  _col = _col - 2
+  let pos = ((_row * 10) + _col)
+  return pos
+}

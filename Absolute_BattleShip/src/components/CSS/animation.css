@@ -7,3 +7,14 @@
   }
 
 }
+@keyframes errorClick {
+  0% {
+    transform: translateX(10%);
+  }
+  50% {
+    transform: translateX(-10%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}

@@ -80,37 +80,40 @@ export class Player {
     //console.log(this.grid);
   }
   RandomStart() {
-    let rPos
-    let vertical
-    for (let i = 0; i < 1; i++) {
+    for (let i = 0; i < this.NumberOfShips; i++) {
+      console.log("I value: " + i)
       // Returns a random integer from 0 to 99:
-      rPos = Math.floor(Math.random() * 100);
+      let rPos = Math.floor(Math.random() * 100);
       /*You can compare Math.random() to 0.5 directly, as the range of Math.random() is [0, 1) 
       (this means 'in the range 0 to 1 including 0, but not 1').
       You can divide the range into [0, 0.5) and [0.5, 1).*/
-      vertical = Math.random() < 0.5;
+      let vertical = Math.random() < 0.5;
       console.log("Random position generated: " + rPos);
       console.log("Random orientation generated: " + vertical);
       if (this.ValidatePlacement(rPos, this.ships[i], vertical) == false) {
         i--
         console.log("Position already busy or invalid: " + rPos);
+        console.log("Trying again\nI value before trying: " + i)
       }
-    }
-    if (vertical == false) {
-      for (let i = 0; i < this.ships[i].Length; i++) {
-        this.grid[rPos + i] = 's';
-        this.ships[0].positions.push(rPos + i);
-      }
-    }
-    else {
-      for (let i = 0; i < this.ships[i].Length; i++) {
-        this.grid[rPos + i * 10] = 's';
-        this.ships[0].positions.push(rPos + i * 10);
+      else {
+        this.ships[i].placed = true;
+        this.ships[i].isVertical = vertical;
+        if (vertical == false) {
+          for (let j = 0; j < this.ships[i].Length; j++) {
+            this.grid[rPos + j] = 's';
+            this.ships[i].positions.push(rPos + j);
+          }
+        }
+        else {
+          for (let j = 0; j < this.ships[i].Length; j++) {
+            this.grid[rPos + j * 10] = 's';
+            this.ships[i].positions.push(rPos + j * 10);
+          }
+        }
       }
     }
     console.log("Random generation finished");
-    console.log(this.ships[0].Length);
-    console.log(this.ships[0]);
+    console.log(this.ships);
     console.log(this.grid);
   }
   ValidatePlacement(_pos, _ship, _isVertical) {
@@ -251,6 +254,21 @@ export class Player {
       }
     }
     return posToCheck
+  }
+  CellValue(_value, _row, _col) {
+    if (_row == 1 || _col == 1)
+      return false
+    _row = _row - 2
+    _col = _col - 2
+    let pos = ((_row * 10) + _col)
+    if (pos < 0)
+      return false
+    //console.log("row: " + _row + " col: " + _col + " pos: " + pos);
+    //console.log("pos: " + pos)
+    if (this.grid[pos] == _value)
+      return true
+    else
+      return false
   }
   /*StartGrid() {
     for (let i = 0; i < 100; i++) this.grid.push("-");

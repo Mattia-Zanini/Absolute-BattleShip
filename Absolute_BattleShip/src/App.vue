@@ -17,10 +17,10 @@ const rIndi = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
       <DetailGame @hideRules="showMenu" />
     </div>
     <div v-if="show == 2" class="row d-flex justify-content-center zoomin">
-      <Grid @exitPreGame="showMenu" :rowIndicators="rIndi" :grid="giocatore.grid" @update-grid="updateGrid" />
+      <Grid @exitPreGame="showMenu" :rowIndicators="rIndi" :player="giocatore" @update-player="updatePlayer" />
     </div>
     <div v-if="show == 3" class="row d-flex justify-content-center zoomin">
-      <Game :rowIndicators="rIndi" :bot="bot" />
+      <Game @exitGame="showMenu" :rowIndicators="rIndi" :bot="bot" />
     </div>
   </div>
 </template>
@@ -46,6 +46,7 @@ export default {
       console.log("This is show's value: " + this.show);
       if (_value == 0) {
         this.giocatore.ResetGrid();
+        this.bot.ResetGrid();
         console.log("EventListener removed: " + _handler);
         window.removeEventListener("keypress", _handler)
 
@@ -56,8 +57,11 @@ export default {
         }
         //console.log(this.giocatore.ships)
       }
+      if(_value == 3){
+        this.bot.RandomStart();
+      }
     },
-    updateGrid(_pos, _ship, _length, _orientation) {
+    updatePlayer(_pos, _ship, _length, _orientation) {
       console.log("Grid updated");
       let orient = _orientation == true ? "Vertical" : "Horizontal";
       console.log("Insert ship with this value: \nPosition: " + _pos + "\nShip: " + _ship + "\nLenght: " + _length + "\nOrientation: " + orient);
@@ -102,7 +106,7 @@ export default {
     console.log("App Correctly mounted");
   },
   components: {
-    DetailGame, Grid, GameMenu,
+    DetailGame, Grid, GameMenu, Game,
   },
 };
 </script>
