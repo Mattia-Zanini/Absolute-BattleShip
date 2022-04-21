@@ -189,7 +189,15 @@ export default {
         this.shipSelected = ""
         console.log("Deselected: " + ship)
       }
-      else if (this.shipSelected == "" && this.GetShipLeft(ship) > 0) {
+      else if (this.GetShipLeft(ship) > 0) {
+        if (this.shipSelected != "") {
+          console.log("Deselecting: " + this.shipSelected)
+          let oldShip = document.getElementsByClassName('selected')
+          //console.log(oldShip[0])
+          oldShip[0].classList.remove('selected-' + this.GetShipLength(this.shipSelected))
+          oldShip[0].classList.remove('selected')
+          console.log("Deselected: " + this.shipSelected)
+        }
         this.shipSelected = ship
         e.currentTarget.classList.add('selected')
         e.currentTarget.classList.add('selected-' + this.GetShipLength(ship))
@@ -270,7 +278,7 @@ export default {
 <style scoped>
 .errorClick:active {
   animation-name: errorClick;
-  animation-duration: 0.4s;
+  animation-duration: 0.2s;
   animation-iteration-count: 1;
   animation-direction: normal;
   animation-fill-mode: forwards;

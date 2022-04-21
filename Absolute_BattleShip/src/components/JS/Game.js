@@ -1,5 +1,5 @@
 import { Player } from "./GameComponents.js";
-export const giocatore = new Player("Giocatore");
+export const player = new Player("PLAYER");
 export const bot = new Player("BOT");
 export function StartGame() {
   // create 10 ships for each player
@@ -26,10 +26,10 @@ export function StartGame() {
       shipName = "Destroyer";
       size = 1;
     }
-    giocatore.NewShip(i, shipName, size);
+    player.NewShip(i, shipName, size);
     bot.NewShip(i, shipName, size);
   }
-  console.log(giocatore);
+  console.log(player);
   console.log(bot);
 }
 export function AdjustCellValue(_row, _col) {

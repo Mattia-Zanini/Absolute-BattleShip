@@ -76,7 +76,7 @@ export class Player {
   ResetGrid() {
     this.grid.length = 0;
     for (let i = 0; i < 100; i++) this.grid.push("-");
-    console.log("Resetting grid");
+    console.log("Resetting " + this.name + " grid");
     //console.log(this.grid);
   }
   RandomStart() {

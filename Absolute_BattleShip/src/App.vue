@@ -1,5 +1,5 @@
 <script setup>
-import { StartGame, giocatore, bot } from "./components/JS/Game.js";
+import { StartGame, player, bot } from "./components/JS/Game.js";
 StartGame();
 const rIndi = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
 </script>
@@ -17,10 +17,10 @@ const rIndi = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
       <DetailGame @hideRules="showMenu" />
     </div>
     <div v-if="show == 2" class="row d-flex justify-content-center zoomin">
-      <Grid @exitPreGame="showMenu" :rowIndicators="rIndi" :player="giocatore" @update-player="updatePlayer" />
+      <Grid @exitPreGame="showMenu" :rowIndicators="rIndi" :player="player" @update-player="updatePlayer" />
     </div>
     <div v-if="show == 3" class="row d-flex justify-content-center zoomin">
-      <Game @exitGame="showMenu" :rowIndicators="rIndi" :bot="bot" />
+      <Game @exitGame="showMenu" :rowIndicators="rIndi" :bot="bot" :player="player" />
     </div>
   </div>
 </template>
@@ -44,20 +44,20 @@ export default {
     showMenu(_value, _handler) {
       this.show = _value;
       console.log("This is show's value: " + this.show);
+      console.log("EventListener removed: " + _handler);
+      window.removeEventListener("keypress", _handler)
       if (_value == 0) {
-        this.giocatore.ResetGrid();
+        this.player.ResetGrid();
         this.bot.ResetGrid();
-        console.log("EventListener removed: " + _handler);
-        window.removeEventListener("keypress", _handler)
 
-        for (let i = 0; i < this.giocatore.NumberOfShips; i++) {
-          this.giocatore.ships[i].isVertical = false;
-          this.giocatore.ships[i].placed = false;
-          this.giocatore.ships[i].positions.length = 0;
+        for (let i = 0; i < this.player.NumberOfShips; i++) {
+          this.player.ships[i].isVertical = false;
+          this.player.ships[i].placed = false;
+          this.player.ships[i].positions.length = 0;
         }
-        //console.log(this.giocatore.ships)
+        //console.log(this.player.ships)
       }
-      if(_value == 3){
+      if (_value == 3) {
         this.bot.RandomStart();
       }
     },
@@ -69,29 +69,29 @@ export default {
       console.log("Updating for " + _ship)
       let ship = this.FindShip(_ship);
       console.log("Ship find in pos " + ship)
-      this.giocatore.ships[ship].isVertical = _orientation;
-      this.giocatore.ships[ship].placed = true;
+      this.player.ships[ship].isVertical = _orientation;
+      this.player.ships[ship].placed = true;
 
       if (_orientation == false) {
         for (let i = 0; i < _length; i++) {
-          this.giocatore.grid[_pos + i] = 's';
-          this.giocatore.ships[ship].positions.push(_pos + i);
+          this.player.grid[_pos + i] = 's';
+          this.player.ships[ship].positions.push(_pos + i);
         }
       }
       else {
         for (let i = 0; i < _length; i++) {
-          this.giocatore.grid[_pos + i * 10] = 's';
-          this.giocatore.ships[ship].positions.push(_pos + i * 10);
+          this.player.grid[_pos + i * 10] = 's';
+          this.player.ships[ship].positions.push(_pos + i * 10);
         }
       }
-      console.log(this.giocatore.grid)
+      console.log(this.player.grid)
       console.log("Ship updated:")
-      console.log(this.giocatore.ships[ship])
+      console.log(this.player.ships[ship])
     },
     FindShip(_name) {
       console.log("Finding ship")
-      for (let i = 0; i < this.giocatore.NumberOfShips; i++) {
-        if (this.giocatore.ships[i].name == _name && this.giocatore.ships[i].placed == false) {
+      for (let i = 0; i < this.player.NumberOfShips; i++) {
+        if (this.player.ships[i].name == _name && this.player.ships[i].placed == false) {
           console.log("Finding ship: success")
           return i;
         }
