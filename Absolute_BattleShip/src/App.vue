@@ -6,7 +6,7 @@ const rIndi = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
 
 <template>
   <div class="container-fluid">
-    <!-- APP -->
+    <!-- APP  MIN SCREEN SIZE 1600PX -->
     <div class="row">
       <h1 class="title-h1">Absolute Battleship</h1>
     </div>

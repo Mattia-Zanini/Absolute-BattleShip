@@ -363,6 +363,6 @@ h3 {
 }
 
 .navigation-section {
-  margin-top: 2vw;
+  margin-top: 2%;
 }
 </style>

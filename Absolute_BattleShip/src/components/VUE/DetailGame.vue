@@ -26,13 +26,3 @@
     margin: 2% 0 0 0 !important;
 }
 </style>
-
-<!--
-<ul>
-    <li>1 Portaerei</li>
-    <li>1 Corazzata</li>
-    <li>1 Sottomarino</li>
-    <li>3 Cacciatorpedinieri</li>
-    <li>4 Navi D'assalto</li>
-</ul>
--->

@@ -5,20 +5,26 @@
 .backgroundGame {
   background-color: #131c22;
 }
+img{
+  position: fixed;
+}
 * {
   color: white;
   font-family: odGmText;
+  -khtml-user-select: none;
+  -o-user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  user-select: none;
 }
 .title-h1 {
   font-size: 5vw;
   text-align: center;
   margin-bottom: 2%;
-  user-select: none;
 }
 .detail-game {
   margin: 1% 0 0 0 !important;
   text-align: justify;
-  user-select: none;
 }
 .detail-game > h4 {
   font-size: 1.5vw !important;
@@ -31,6 +37,7 @@ table.grid {
 .grid-border {
   border: 1px solid !important;
   max-width: 50px;
+  max-height: 50px;
 }
 .no-border {
   border: none !important;
@@ -40,7 +47,6 @@ table.grid {
   font-size: 1vw;
   font-weight: bold;
   margin-left: 1vw;
-  user-select: none;
 }
 .btn-style {
   font-size: 4vw !important;
@@ -84,4 +90,19 @@ table.grid {
 }
 .ships {
   margin-top: 4% !important;
+}
+.hitedCell{
+  animation-name: noHit;
+  animation-duration: 0.5s;
+  animation-iteration-count: 1;
+  animation-direction: normal;
+  animation-fill-mode: forwards;
+  
+  margin-left: 1.1vw !important;
+  margin-top: -0.3vw !important;
+}
+.hitedShip{
+  width: 1.5vw !important;
+  margin-left: 0.8vw !important;
+  margin-top: -0.7vw !important;
 }

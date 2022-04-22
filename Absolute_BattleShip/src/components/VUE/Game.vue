@@ -78,11 +78,40 @@ export default {
             return AdjustCellValue(_row, _col)
         },
         Attack(e) {
-            var img = document.createElement("img");
-            img.src = "./src/assets/images/attackedCell.png"
-            img.classList.add("attacked-img")
-            e.currentTarget.appendChild(img);
-        }
+            let cellClasses = e.currentTarget.getAttribute('class')
+            if(!cellClasses.includes("no-border")){
+                if (!cellClasses.includes("attacked")) {
+                e.currentTarget.classList.add('attacked')
+                let img = document.createElement("img");
+                img.setAttribute("draggable", false);
+                if (this.CheckHit(true, parseInt(e.currentTarget.getAttribute('id')))) {
+                    console.log("A SHIP HAS BEEN HITED")
+
+                    img.src = "./src/assets/images/hitedShip.png"
+                    img.classList.add('hitedCell')
+                    img.classList.add('hitedShip')
+                    e.currentTarget.appendChild(img);
+                }
+                else {
+                    img.src = "./src/assets/images/attackedCell.png"
+                    img.classList.add('hitedCell')
+                    e.currentTarget.appendChild(img);
+                }
+            }
+            else
+                console.log("Already attacked at position: " + e.currentTarget.getAttribute('id'))
+            }
+        },
+        CheckHit(_isPlayer, _hit) {
+            if (_isPlayer) {
+                console.log("Checking player's hit")
+                return this.bot.CheckGrid(_hit)
+            }
+            else {
+                console.log("Checking bot's hit")
+                return this.player.CheckGrid(_hit)
+            }
+        },
     },
     mounted() {
     },
@@ -108,10 +137,5 @@ export default {
     height: 7.5vw !important;
     margin-left: 0 !important;
     margin-top: 28.5vw !important;
-}
-
-.attacked-img {
-    margin: 0 !important;
-    display: block !important;
 }
 </style>

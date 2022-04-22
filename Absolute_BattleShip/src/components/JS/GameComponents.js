@@ -5,6 +5,7 @@ export class Ship {
   isVertical;
   placed;
   positions;
+  hit;
   constructor(_id, _name, _Length) {
     this.id = _id;
     this.name = _name;
@@ -12,24 +13,10 @@ export class Ship {
     this.isVertical = false;
     this.placed = false;
     this.positions = [];
+    this.hit = 0;
   }
 }
-// - nothing
-// s ship
-// m miss
-// h hit
-/*
-  '-', '-', '-', '-', '-', '-', '-', '-', '-', '-',
-  '-', '-', '-', '-', '-', '-', '-', '-', '-', '-',
-  '-', '-', '-', '-', '-', '-', '-', '-', '-', '-',
-  '-', '-', '-', '-', '-', '-', '-', '-', '-', '-',
-  '-', '-', '-', '-', '-', '-', '-', '-', '-', '-',
-  '-', '-', '-', '-', '-', '-', '-', '-', '-', '-',
-  '-', '-', '-', '-', '-', '-', '-', '-', '-', '-',
-  '-', '-', '-', '-', '-', '-', '-', '-', '-', '-',
-  '-', '-', '-', '-', '-', '-', '-', '-', '-', '-',
-  '-', '-', '-', '-', '-', '-', '-', '-', '-', '-',
-*/
+
 export class Player {
   name;
   ships;
@@ -37,19 +24,11 @@ export class Player {
   constructor(_name) {
     this.name = _name;
     this.ships = [];
-    /*this.grid = [
-      's', 's', 's', 's', 's', 's', 's', 's', 's', 's',
-      's', 's', 's', 's', 's', 's', 's', 's', 's', 's',
-      's', 's', 's', 's', 's', 's', 's', 's', 's', 's',
-      '-', '-', '-', '-', '-', '-', '-', '-', '-', '-',,
-      's', 's', 's', 's', 's', 's', 's', 's', 's', 's',
-      's', 's', 's', 's', 's', 's', 's', 's', 's', 's',
-      '-', '-', '-', '-', '-', '-', '-', '-', '-', '-',
-      's', 's', 's', 's', 's', 's', 's', 's', 's', 's',
-      's', 's', 's', 's', 's', 's', 's', 's', 's', 's',
-      's', 's', 's', 's', 's', 's', 's', 's', 's', 's',
-    ];*/
     this.grid = [
+      // - nothing
+      // s ship
+      // m miss
+      // h hit
       '-', '-', '-', '-', '-', '-', '-', '-', '-', '-',
       '-', '-', '-', '-', '-', '-', '-', '-', '-', '-',
       '-', '-', '-', '-', '-', '-', '-', '-', '-', '-',
@@ -61,7 +40,6 @@ export class Player {
       '-', '-', '-', '-', '-', '-', '-', '-', '-', '-',
       '-', '-', '-', '-', '-', '-', '-', '-', '-', '-',
     ];
-    //this.StartGrid();
   }
   NewShip(_id, _name, _Length) {
     this.ships.push(new Ship(_id, _name, _Length));
@@ -270,7 +248,20 @@ export class Player {
     else
       return false
   }
-  /*StartGrid() {
-    for (let i = 0; i < 100; i++) this.grid.push("-");
-  }*/
+  CheckGrid(_pos) {
+    console.log("Checking hit at: " + _pos)
+    if (this.grid[_pos] == 's') {
+      for (let i = 0; i < this.NumberOfShips; i++) {
+        for (let j = 0; j < this.ships[i].Length; j++) {
+          if (this.ships[i].positions[j] == _pos) {
+            this.ships[i].hit++
+            console.log("Hit a ship at position: " + _pos)
+          }
+        }
+      }
+      return true
+    }
+    else
+      return false
+  }
 }
