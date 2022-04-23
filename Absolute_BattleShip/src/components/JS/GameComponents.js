@@ -255,13 +255,21 @@ export class Player {
         for (let j = 0; j < this.ships[i].Length; j++) {
           if (this.ships[i].positions[j] == _pos) {
             this.ships[i].hit++
-            console.log("Hit a ship at position: " + _pos)
+            console.log("Hitted a ship at position: " + _pos)
+            this.grid[_pos] = 'h'
           }
         }
       }
       return true
     }
-    else
+    else {
+      this.grid[_pos] = 'm'
       return false
+    }
+  }
+  Attack() {
+    let attck = Math.floor(Math.random() * 100)
+    console.log("Attacking position: " + attck)
+    return attck
   }
 }

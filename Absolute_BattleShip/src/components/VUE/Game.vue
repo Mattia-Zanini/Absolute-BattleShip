@@ -65,6 +65,8 @@ export default {
     props: ['rowIndicators', 'bot', 'player'],
     data() {
         return {
+            strike: false,
+            turn: true,
         }
     },
     methods: {
@@ -78,29 +80,38 @@ export default {
             return AdjustCellValue(_row, _col)
         },
         Attack(e) {
-            let cellClasses = e.currentTarget.getAttribute('class')
-            if(!cellClasses.includes("no-border")){
-                if (!cellClasses.includes("attacked")) {
-                e.currentTarget.classList.add('attacked')
-                let img = document.createElement("img");
-                img.setAttribute("draggable", false);
-                if (this.CheckHit(true, parseInt(e.currentTarget.getAttribute('id')))) {
-                    console.log("A SHIP HAS BEEN HITED")
-
-                    img.src = "./src/assets/images/hitedShip.png"
-                    img.classList.add('hitedCell')
-                    img.classList.add('hitedShip')
-                    e.currentTarget.appendChild(img);
-                }
-                else {
-                    img.src = "./src/assets/images/attackedCell.png"
-                    img.classList.add('hitedCell')
-                    e.currentTarget.appendChild(img);
+            if (this.turn) {
+                let cellClasses = e.currentTarget.getAttribute('class')
+                if (!cellClasses.includes("no-border")) {
+                    if (!cellClasses.includes("attacked")) {
+                        e.currentTarget.classList.add('attacked')
+                        let img = document.createElement("img");
+                        img.setAttribute("draggable", false);
+                        if (this.CheckHit(true, parseInt(e.currentTarget.getAttribute('id')))) {
+                            img.src = "./src/assets/images/hitedShip.png"
+                            img.classList.add('hitedCell')
+                            img.classList.add('hitedShip')
+                            e.currentTarget.appendChild(img);
+                        }
+                        else {
+                            img.src = "./src/assets/images/attackedCell.png"
+                            img.classList.add('hitedCell')
+                            e.currentTarget.appendChild(img);
+                            this.turn = false
+                            while (this.turn == false) {
+                                if (!this.CheckHit(false, this.bot.Attack())) {
+                                    this.turn = true
+                                    console.log("Now is player's turn")
+                                }
+                            }
+                        }
+                    }
+                    else
+                        console.log("Already attacked at position: " + e.currentTarget.getAttribute('id'))
                 }
             }
             else
-                console.log("Already attacked at position: " + e.currentTarget.getAttribute('id'))
-            }
+                console.log("It's not your turn to attack")
         },
         CheckHit(_isPlayer, _hit) {
             if (_isPlayer) {
