@@ -22,6 +22,9 @@ const rIndi = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
     <div v-if="show == 3" class="row d-flex justify-content-center zoomin">
       <Game @exitGame="showMenu" :rowIndicators="rIndi" :bot="bot" :player="player" />
     </div>
+    <div v-if="show == 4" class="row d-flex justify-content-center zoomin">
+      <End @exit="showMenu" />
+    </div>
   </div>
 </template>
 
@@ -47,8 +50,8 @@ export default {
       console.log("EventListener removed: " + _handler);
       window.removeEventListener("keypress", _handler)
       if (_value == 0) {
-        this.player.ResetGrid();
-        this.bot.ResetGrid();
+        this.player.Reset();
+        this.bot.Reset();
 
         for (let i = 0; i < this.player.NumberOfShips; i++) {
           this.player.ships[i].isVertical = false;
@@ -59,6 +62,9 @@ export default {
       }
       if (_value == 3) {
         this.bot.RandomStart();
+        //only in test mode
+        this.player.Reset();
+        this.player.RandomStart();
       }
     },
     updatePlayer(_pos, _ship, _length, _orientation) {

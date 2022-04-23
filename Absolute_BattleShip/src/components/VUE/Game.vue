@@ -9,7 +9,7 @@
                             <tr v-for="row in 11" :key="row">
                                 <td v-for="col in 11" :key="col" :class="[
                                     { 'no-border': row == 1 || col == 1 },
-                                    { 'grid-border': row != 1 && col != 1 },
+                                    { 'grid-border player': row != 1 && col != 1 },
                                     { 'blue': CellType('-', row, col, true) },
                                     { 'busy': CellType('s', row, col, true) },
                                 ]" :id="GetPos(row, col)">
@@ -21,11 +21,8 @@
                         </tbody>
                     </table>
                 </div>
+                <!-- NAVIGATION SECTION -->
                 <div class="col-2">
-                    <div class="row">
-                        <div class="col-12">
-                        </div>
-                    </div>
                     <div class="row">
                         <div class="col-12">
                             <button class="btn btn-style" @click="$emit('exitGame', 0)">Esci</button>
@@ -39,7 +36,7 @@
                             <tr v-for="row in 11" :key="row">
                                 <td v-for="col in 11" :key="col" :class="[
                                     { 'no-border': row == 1 || col == 1 },
-                                    { 'grid-border blue': row != 1 && col != 1 }
+                                    { 'grid-border blue bot': row != 1 && col != 1 }
                                 ]" :id="GetPos(row, col)" @click="Attack">
                                     <!--<td v-for="col in 11" :key="col" :class="[
                                     { 'no-border': row == 1 || col == 1 },
@@ -67,6 +64,8 @@ export default {
         return {
             strike: false,
             turn: true,
+            winner: "",
+            finished: false,
         }
     },
     methods: {
@@ -80,38 +79,83 @@ export default {
             return AdjustCellValue(_row, _col)
         },
         Attack(e) {
-            if (this.turn) {
-                let cellClasses = e.currentTarget.getAttribute('class')
-                if (!cellClasses.includes("no-border")) {
-                    if (!cellClasses.includes("attacked")) {
-                        e.currentTarget.classList.add('attacked')
-                        let img = document.createElement("img");
-                        img.setAttribute("draggable", false);
-                        if (this.CheckHit(true, parseInt(e.currentTarget.getAttribute('id')))) {
-                            img.src = "./src/assets/images/hitedShip.png"
-                            img.classList.add('hitedCell')
-                            img.classList.add('hitedShip')
-                            e.currentTarget.appendChild(img);
-                        }
-                        else {
-                            img.src = "./src/assets/images/attackedCell.png"
-                            img.classList.add('hitedCell')
-                            e.currentTarget.appendChild(img);
-                            this.turn = false
-                            while (this.turn == false) {
-                                if (!this.CheckHit(false, this.bot.Attack())) {
-                                    this.turn = true
-                                    console.log("Now is player's turn")
+            if (!this.finished) {
+                if (this.turn) {
+                    let cellClasses = e.currentTarget.getAttribute('class')
+                    if (!cellClasses.includes("no-border")) {
+                        if (!cellClasses.includes("attacked")) {
+                            e.currentTarget.classList.add('attacked')
+                            let img = document.createElement("img");
+                            img.setAttribute("draggable", false);
+                            if (this.CheckHit(true, parseInt(e.currentTarget.getAttribute('id')))) {
+                                img.src = "./src/assets/images/hitedShip.png"
+                                img.classList.add('hitedCell')
+                                img.classList.add('hitedShip')
+                                e.currentTarget.appendChild(img);
+
+                                this.bot.CheckSunkenShips(parseInt(e.currentTarget.getAttribute('id')));
+                            }
+                            else {
+                                img.src = "./src/assets/images/attackedCell.png"
+                                img.classList.add('hitedCell')
+                                e.currentTarget.appendChild(img);
+                                this.turn = false
+                                console.log("BOT'S TURN")
+                                let botStrikes = 0
+                                while (this.turn == false) {
+                                    if (!this.CheckHit(false, this.bot.Attack(this.player.grid))) {
+
+                                        let playerMissedCell = document.getElementsByClassName('player')[this.bot.lastAttack]
+                                        playerMissedCell.classList.add('attacked');
+                                        //console.log(playerMissedCell)
+                                        let playerMissedImg = document.createElement("img");
+                                        playerMissedImg.setAttribute("draggable", false);
+                                        playerMissedImg.src = "./src/assets/images/attackedCell.png"
+                                        playerMissedImg.classList.add('hitedCell')
+                                        playerMissedCell.appendChild(playerMissedImg);
+
+                                        //console.log(this.player.grid)
+
+                                        this.turn = true
+                                        console.log("Bot's strikes: " + botStrikes)
+                                        console.log("PLAYER'S TURN")
+                                    }
+                                    else {
+                                        botStrikes++
+                                        let playerHitedCell = document.getElementsByClassName('player')[this.bot.lastAttack]
+                                        playerHitedCell.classList.add('attacked');
+                                        //console.log(playerHitedCell)
+                                        let playerHitImg = document.createElement("img");
+                                        playerHitImg.setAttribute("draggable", false);
+                                        playerHitImg.src = "./src/assets/images/hitedShip.png"
+                                        playerHitImg.classList.add('hitedCell')
+                                        playerHitImg.classList.add('hitedShip')
+                                        playerHitedCell.appendChild(playerHitImg)
+
+                                        this.player.CheckSunkenShips(this.bot.lastAttack);
+                                    }
                                 }
                             }
                         }
+                        else
+                            console.log("Already attacked at position: " + e.currentTarget.getAttribute('id'))
                     }
-                    else
-                        console.log("Already attacked at position: " + e.currentTarget.getAttribute('id'))
                 }
+                else
+                    console.log("It's not your turn to attack")
+                if (this.player.sunkenShips == 10) {
+                    console.log("YOU LOSE")
+                    this.finished = true
+                    this.winner = "bot"
+                }
+                else if (this.bot.sunkenShips == 10) {
+                    console.log("YOU WIN")
+                    this.finished = true
+                    this.winner = "player"
+                }
+                if(this.finished)
+                    this.$emit('gameFinished', this.winner)
             }
-            else
-                console.log("It's not your turn to attack")
         },
         CheckHit(_isPlayer, _hit) {
             if (_isPlayer) {

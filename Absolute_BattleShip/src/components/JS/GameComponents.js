@@ -6,6 +6,7 @@ export class Ship {
   placed;
   positions;
   hit;
+  sunken;
   constructor(_id, _name, _Length) {
     this.id = _id;
     this.name = _name;
@@ -14,6 +15,14 @@ export class Ship {
     this.placed = false;
     this.positions = [];
     this.hit = 0;
+    this.sunken = false;
+  }
+  ResetShip() {
+    this.isVertical = false;
+    this.placed = false;
+    this.positions.length = 0;
+    this.hit = 0;
+    this.sunken = false;
   }
 }
 
@@ -21,8 +30,11 @@ export class Player {
   name;
   ships;
   grid;
+  sunkenShips;
+  lastAttack;
   constructor(_name) {
     this.name = _name;
+    this.sunkenShips = 0;
     this.ships = [];
     this.grid = [
       // - nothing
@@ -51,10 +63,16 @@ export class Player {
   get NumberOfShips() {
     return this.ships.length;
   }
-  ResetGrid() {
+  Reset() {
     this.grid.length = 0;
+    console.log("Resetting " + this.name + "'s grid and attributes");
     for (let i = 0; i < 100; i++) this.grid.push("-");
-    console.log("Resetting " + this.name + " grid");
+    this.sunkenShips = 0;
+    this.lastAttack = null;
+    console.log("Resetting " + this.name + "'s ships");
+    for(let i = 0; i < this.NumberOfShips; i++) {
+      this.ships[i].ResetShip();
+    }
     //console.log(this.grid);
   }
   RandomStart() {
@@ -267,9 +285,38 @@ export class Player {
       return false
     }
   }
-  Attack() {
-    let attck = Math.floor(Math.random() * 100)
-    console.log("Attacking position: " + attck)
+  Attack(_enemysGrid) {
+    let isValid = false
+    let attck
+    do {
+      attck = Math.floor(Math.random() * 100)
+      console.log("Attacking position: " + attck)
+      console.log("Enemy's grid value: " + _enemysGrid[attck])
+      if (_enemysGrid[attck] == 'm' || _enemysGrid[attck] == 'h') {
+        console.log("Already attacked position: " + attck)
+        isValid = false
+      }
+      else
+        isValid = true
+    } while (isValid == false)
+    //console.log("Saving lastAttack")
+    this.lastAttack = attck
     return attck
+  }
+  CheckSunkenShips(_hit) {
+    console.log("Checking sunken ships")
+    for (let i = 0; i < this.NumberOfShips; i++) {
+      for (let j = 0; j < this.ships[i].Length; j++) {
+        if (this.ships[i].positions[j] == _hit) {
+          console.log("Hited ships")
+          if (this.ships[i].hit == this.ships[i].Length) {
+            console.log(this.name + "'s " + this.ships[i].name + " sunken, ship id: " + this.ships[i].id)
+            this.ships[i].sunken = true
+            this.sunkenShips++
+            //console.log(this.ships[i])
+          }
+        }
+      }
+    }
   }
 }
