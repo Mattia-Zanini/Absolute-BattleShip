@@ -108,10 +108,10 @@ export default {
   },
   methods: {
     StartGame() {
-      //remenber to change this line
-      this.$emit('exitPreGame', 3, this.RotateListener)
-      /*if (this.nCarr + this.nBatt + this.nSub + this.nCru + this.nDest == 0)
-        this.$emit('exitPreGame', 3, this.RotateListener)*/
+      //remenber to change this line, test mode
+      //this.$emit('exitPreGame', 3, this.RotateListener)
+      if (this.nCarr + this.nBatt + this.nSub + this.nCru + this.nDest == 0)
+        this.$emit('exitPreGame', 3, this.RotateListener)
     },
     CellType(_value, _row, _col) {
       //non passa this.player.grid

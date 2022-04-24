@@ -2,6 +2,7 @@
 import { StartGame, player, bot } from "./components/JS/Game.js";
 StartGame();
 const rIndi = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
+const winner = "";
 </script>
 
 <template>
@@ -20,10 +21,10 @@ const rIndi = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
       <Grid @exitPreGame="showMenu" :rowIndicators="rIndi" :player="player" @update-player="updatePlayer" />
     </div>
     <div v-if="show == 3" class="row d-flex justify-content-center zoomin">
-      <Game @exitGame="showMenu" :rowIndicators="rIndi" :bot="bot" :player="player" />
+      <Game @exitGame="showMenu" :rowIndicators="rIndi" :bot="bot" :player="player" @gameFinished="Winner"/>
     </div>
     <div v-if="show == 4" class="row d-flex justify-content-center zoomin">
-      <End @exit="showMenu" />
+      <End @exit="showMenu" :winn="winner"/>
     </div>
   </div>
 </template>
@@ -33,6 +34,7 @@ import DetailGame from "./components/VUE/DetailGame.vue";
 import Grid from "./components/VUE/Grid.vue";
 import GameMenu from "./components/VUE/GameMenu.vue";
 import Game from "./components/VUE/Game.vue";
+import End from "./components/VUE/End.vue";
 export default {
   // Properties returned from data() becomes reactive state
   // and will be exposed on `this`.
@@ -63,8 +65,8 @@ export default {
       if (_value == 3) {
         this.bot.RandomStart();
         //only in test mode
-        this.player.Reset();
-        this.player.RandomStart();
+        /*this.player.Reset();
+        this.player.RandomStart();*/
       }
     },
     updatePlayer(_pos, _ship, _length, _orientation) {
@@ -102,6 +104,9 @@ export default {
           return i;
         }
       }
+    },
+    Winner(_winnerName){
+      this.winner = _winnerName;
     }
   },
 
@@ -112,7 +117,7 @@ export default {
     console.log("App Correctly mounted");
   },
   components: {
-    DetailGame, Grid, GameMenu, Game,
+    DetailGame, Grid, GameMenu, Game, End,
   },
 };
 </script>

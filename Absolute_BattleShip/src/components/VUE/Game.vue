@@ -100,41 +100,10 @@ export default {
                                 img.classList.add('hitedCell')
                                 e.currentTarget.appendChild(img);
                                 this.turn = false
+
                                 console.log("BOT'S TURN")
-                                let botStrikes = 0
-                                while (this.turn == false) {
-                                    if (!this.CheckHit(false, this.bot.Attack(this.player.grid))) {
-
-                                        let playerMissedCell = document.getElementsByClassName('player')[this.bot.lastAttack]
-                                        playerMissedCell.classList.add('attacked');
-                                        //console.log(playerMissedCell)
-                                        let playerMissedImg = document.createElement("img");
-                                        playerMissedImg.setAttribute("draggable", false);
-                                        playerMissedImg.src = "./src/assets/images/attackedCell.png"
-                                        playerMissedImg.classList.add('hitedCell')
-                                        playerMissedCell.appendChild(playerMissedImg);
-
-                                        //console.log(this.player.grid)
-
-                                        this.turn = true
-                                        console.log("Bot's strikes: " + botStrikes)
-                                        console.log("PLAYER'S TURN")
-                                    }
-                                    else {
-                                        botStrikes++
-                                        let playerHitedCell = document.getElementsByClassName('player')[this.bot.lastAttack]
-                                        playerHitedCell.classList.add('attacked');
-                                        //console.log(playerHitedCell)
-                                        let playerHitImg = document.createElement("img");
-                                        playerHitImg.setAttribute("draggable", false);
-                                        playerHitImg.src = "./src/assets/images/hitedShip.png"
-                                        playerHitImg.classList.add('hitedCell')
-                                        playerHitImg.classList.add('hitedShip')
-                                        playerHitedCell.appendChild(playerHitImg)
-
-                                        this.player.CheckSunkenShips(this.bot.lastAttack);
-                                    }
-                                }
+                                this.BotAttack()
+                                this.CheckVictory()
                             }
                         }
                         else
@@ -143,20 +112,81 @@ export default {
                 }
                 else
                     console.log("It's not your turn to attack")
-                if (this.player.sunkenShips == 10) {
-                    console.log("YOU LOSE")
-                    this.finished = true
-                    this.winner = "bot"
-                }
-                else if (this.bot.sunkenShips == 10) {
-                    console.log("YOU WIN")
-                    this.finished = true
-                    this.winner = "player"
-                }
-                if(this.finished)
-                    this.$emit('gameFinished', this.winner)
+                this.CheckVictory()
             }
         },
+        BotAttack() {
+            let botStrikes = 0
+            while (this.turn == false) {
+                if (!this.CheckHit(false, this.bot.Attack(this.player.grid))) {
+
+                    let playerMissedCell = document.getElementsByClassName('player')[this.bot.lastAttack]
+                    playerMissedCell.classList.add('attacked');
+                    //console.log(playerMissedCell)
+                    let playerMissedImg = document.createElement("img");
+                    playerMissedImg.setAttribute("draggable", false);
+                    playerMissedImg.src = "./src/assets/images/attackedCell.png"
+                    playerMissedImg.classList.add('hitedCell')
+                    playerMissedCell.appendChild(playerMissedImg);
+
+                    //console.log(this.player.grid)
+
+                    this.turn = true
+                    console.log("Bot's strikes: " + botStrikes)
+                    console.log("PLAYER'S TURN")
+                }
+                else {
+                    botStrikes++
+                    let playerHitedCell = document.getElementsByClassName('player')[this.bot.lastAttack]
+                    playerHitedCell.classList.add('attacked');
+                    //console.log(playerHitedCell)
+                    let playerHitImg = document.createElement("img");
+                    playerHitImg.setAttribute("draggable", false);
+                    playerHitImg.src = "./src/assets/images/hitedShip.png"
+                    playerHitImg.classList.add('hitedCell')
+                    playerHitImg.classList.add('hitedShip')
+                    playerHitedCell.appendChild(playerHitImg)
+
+                    this.player.CheckSunkenShips(this.bot.lastAttack);
+                }
+            }
+        },
+        /*TestPlayerAttack() {
+            let playerStrikes = 0
+            while (this.turn == true) {
+                if (!this.CheckHit(true, this.player.Attack(this.bot.grid))) {
+
+                    let playerMissedCell = document.getElementsByClassName('bot')[this.player.lastAttack]
+                    playerMissedCell.classList.add('attacked');
+                    //console.log(playerMissedCell)
+                    let playerMissedImg = document.createElement("img");
+                    playerMissedImg.setAttribute("draggable", false);
+                    playerMissedImg.src = "./src/assets/images/attackedCell.png"
+                    playerMissedImg.classList.add('hitedCell')
+                    playerMissedCell.appendChild(playerMissedImg);
+
+                    //console.log(this.player.grid)
+
+                    this.turn = false
+                    console.log("Player's strikes: " + playerStrikes)
+                    console.log("BOT'S TURN")
+                }
+                else {
+                    playerStrikes++
+                    let playerHitedCell = document.getElementsByClassName('bot')[this.player.lastAttack]
+                    playerHitedCell.classList.add('attacked');
+                    //console.log(playerHitedCell)
+                    let playerHitImg = document.createElement("img");
+                    playerHitImg.setAttribute("draggable", false);
+                    playerHitImg.src = "./src/assets/images/hitedShip.png"
+                    playerHitImg.classList.add('hitedCell')
+                    playerHitImg.classList.add('hitedShip')
+                    playerHitedCell.appendChild(playerHitImg)
+
+                    this.bot.CheckSunkenShips(this.player.lastAttack);
+                }
+            }
+        },*/
         CheckHit(_isPlayer, _hit) {
             if (_isPlayer) {
                 console.log("Checking player's hit")
@@ -167,8 +197,27 @@ export default {
                 return this.player.CheckGrid(_hit)
             }
         },
+        CheckVictory() {
+            if (!this.finished) {
+                if (this.player.sunkenShips == 10) {
+                    console.log("YOU LOSE")
+                    this.finished = true
+                    this.winner = "bot"
+                }
+                else if (this.bot.sunkenShips == 10) {
+                    console.log("YOU WIN")
+                    this.finished = true
+                    this.winner = "player"
+                }
+            }
+            if (this.finished) {
+                this.$emit('gameFinished', this.winner)
+                this.$emit('exitGame', 4)
+            }
+        },
     },
     mounted() {
+        console.log("Game started")
     },
 };
 </script>
