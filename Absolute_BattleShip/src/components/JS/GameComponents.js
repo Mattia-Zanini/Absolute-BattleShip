@@ -336,7 +336,21 @@ export class Player {
     if (this.nearbyArea.length == 0) {
       this.nearbyArea = [1, -1, 10, -10]
       this.lastAttackedShip = undefined
-      nearby = this.RandomAttack(_enemysGrid);
+      let lastCheck = false
+      for (let i = 0; i < 99; i++) {
+        if (_enemysGrid[i] != 'm' && _enemysGrid[i] != 'h' && this.HittedShipsNearby(_enemysGrid, i)) {
+          nearby = i
+          lastCheck = true
+        }
+      }
+      if (lastCheck) {
+        console.log("Attack where there is maybe a ship, with the last check: " + nearby)
+        this.lastAttack = nearby
+        if (_enemysGrid[nearby] == 's')
+          this.lastAttackedShip = nearby
+      }
+      else
+        nearby = this.RandomAttack(_enemysGrid);
       console.log("Random Attack with no nearby cell to check")
     }
     else {
@@ -382,6 +396,15 @@ export class Player {
       return true
     }
     console.log("No problem at: " + _posToAtt)
+    return false
+  }
+  HittedShipsNearby(_enemysGrid, _pos) {
+    let check = [-1, 1, 10, -10]
+    for (let i = 0; i < check.length; i++) {
+      let posToControl = _pos + check[i]
+      if (posToControl > -1 && posToControl < 100 && _enemysGrid[posToControl] == 'h')
+        return true
+    }
     return false
   }
 }
