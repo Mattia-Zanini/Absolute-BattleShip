@@ -32,9 +32,12 @@ export class Player {
   grid;
   sunkenShips;
   lastAttack;
+  lastAttackedShip;
+  nearbyArea;
   constructor(_name) {
     this.name = _name;
     this.sunkenShips = 0;
+    this.nearbyArea = [1, -1, 10, -10]
     this.ships = [];
     this.grid = [
       // - nothing
@@ -70,7 +73,7 @@ export class Player {
     this.sunkenShips = 0;
     this.lastAttack = null;
     console.log("Resetting " + this.name + "'s ships");
-    for(let i = 0; i < this.NumberOfShips; i++) {
+    for (let i = 0; i < this.NumberOfShips; i++) {
       this.ships[i].ResetShip();
     }
     //console.log(this.grid);
@@ -286,6 +289,19 @@ export class Player {
     }
   }
   Attack(_enemysGrid) {
+    console.log("Enemy's grid:\n" + _enemysGrid)
+    if (this.lastAttack == undefined)
+      console.log("Last attack not registered yet")
+    else {
+      console.log("Last attack already registered with value: " + this.lastAttack)
+      console.log("Enemy grid in pos last attack is: " + _enemysGrid[this.lastAttack])
+    }
+    if (this.lastAttackedShip == undefined)
+      return this.RandomAttack(_enemysGrid);
+    return this.NearbyAttack(_enemysGrid)
+  }
+  RandomAttack(_enemysGrid) {
+    console.log("Random Attack")
     let isValid = false
     let attck
     do {
@@ -301,7 +317,42 @@ export class Player {
     } while (isValid == false)
     //console.log("Saving lastAttack")
     this.lastAttack = attck
+    if (_enemysGrid[attck] == 's')
+      this.lastAttackedShip = attck
     return attck
+  }
+  NearbyAttack(_enemysGrid) {
+    console.log("Nearby Attack")
+    let nearby
+    console.log("Deleting uneccessary pos, start value: " + this.nearbyArea.length)
+    for (let i = 0; i < this.nearbyArea.length; i++) {
+      let nerb = this.nearbyArea[i] + this.lastAttackedShip
+      if (nerb < 0 || nerb > 99 || _enemysGrid[nerb] == 'm' || _enemysGrid[nerb] == 'h' || this.BorderAttackCheck(nerb)) {
+        this.nearbyArea.splice(i, 1)
+        i--
+      }
+    }
+    console.log("End value: " + this.nearbyArea.length)
+    if (this.nearbyArea.length == 0) {
+      this.nearbyArea = [1, -1, 10, -10]
+      this.lastAttackedShip = undefined
+      nearby = this.RandomAttack(_enemysGrid);
+      console.log("Random Attack with no nearby cell to check")
+    }
+    else {
+      let rand = Math.floor(Math.random() * this.nearbyArea.length)
+      nearby = this.nearbyArea[rand] + this.lastAttackedShip
+      console.log("Rand value: " + rand)
+      console.log("Value extracted: " + this.nearbyArea[rand])
+      console.log("Nearby cell is: " + nearby)
+      this.nearbyArea.splice(rand, 1)
+      this.lastAttack = nearby
+      if (_enemysGrid[nearby] == 's') {
+        this.lastAttackedShip = nearby
+        this.nearbyArea = [1, -1, 10, -10]
+      }
+    }
+    return nearby
   }
   CheckSunkenShips(_hit) {
     console.log("Checking sunken ships")
@@ -318,5 +369,19 @@ export class Player {
         }
       }
     }
+  }
+  BorderAttackCheck(_posToAtt) {
+    //BORDER RIGHT
+    if (this.lastAttackedShip % 10 == 9 && _posToAtt > this.lastAttackedShip) {
+      console.log("border right, it's bad to attack: " + _posToAtt + "when u are at: " + this.lastAttackedShip)
+      return true
+    }
+    //BORDER LEFT
+    if (this.lastAttackedShip % 10 == 0 && _posToAtt < this.lastAttackedShip) {
+      console.log("border left, it's bad to attack: " + _posToAtt + "when u are at: " + this.lastAttackedShip)
+      return true
+    }
+    console.log("No problem at: " + _posToAtt)
+    return false
   }
 }
