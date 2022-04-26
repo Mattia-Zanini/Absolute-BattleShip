@@ -310,7 +310,7 @@ export class Player {
       attck = Math.floor(Math.random() * 100)
       console.log("Attacking position: " + attck)
       console.log("Enemy's grid value: " + _enemysGrid[attck])
-      if (_enemysGrid[attck] == 'm' || _enemysGrid[attck] == 'h' || this.DoNotHitHere(_enemysGrid, attck)) {
+      if (_enemysGrid[attck] == 'm' || _enemysGrid[attck] == 'h' || this.DoNotHitHere(attck, true, _enemysGrid)) {
         console.log("Already attacked position: " + attck)
         isValid = false
       }
@@ -319,8 +319,10 @@ export class Player {
     } while (isValid == false)
     //console.log("Saving lastAttack")
     this.lastAttack = attck
-    if (_enemysGrid[attck] == 's')
+    if (_enemysGrid[attck] == 's') {
       this.lastAttackedShip = attck
+      this.DoNotHitHere(attck, false, _enemysGrid)
+    }
     return attck
   }
   NearbyAttack(_enemysGrid) {
@@ -329,7 +331,7 @@ export class Player {
     console.log("Deleting uneccessary pos, start value: " + this.nearbyArea.length)
     for (let i = 0; i < this.nearbyArea.length; i++) {
       let nerb = this.nearbyArea[i] + this.lastAttackedShip
-      if (nerb < 0 || nerb > 99 || _enemysGrid[nerb] == 'm' || _enemysGrid[nerb] == 'h' || this.BorderAttackCheck(nerb)) {
+      if (nerb < 0 || nerb > 99 || _enemysGrid[nerb] == 'm' || _enemysGrid[nerb] == 'h' || this.BorderAttackCheck(nerb) || this.DoNotHitHere(nerb, true, _enemysGrid)) {
         this.nearbyArea.splice(i, 1)
         i--
       }
@@ -338,21 +340,7 @@ export class Player {
     if (this.nearbyArea.length == 0) {
       this.nearbyArea = [1, -1, 10, -10]
       this.lastAttackedShip = undefined
-      let lastCheck = false
-      for (let i = 0; i < 99; i++) {
-        if (_enemysGrid[i] != 'm' && _enemysGrid[i] != 'h' && this.HittedShipsNearby(_enemysGrid, i)) {
-          nearby = i
-          lastCheck = true
-        }
-      }
-      if (lastCheck) {
-        console.log("Attack where there is maybe a ship, with the last check: " + nearby)
-        this.lastAttack = nearby
-        if (_enemysGrid[nearby] == 's')
-          this.lastAttackedShip = nearby
-      }
-      else
-        nearby = this.RandomAttack(_enemysGrid);
+      nearby = this.RandomAttack(_enemysGrid);
       console.log("Random Attack with no nearby cell to check")
     }
     else {
@@ -366,6 +354,7 @@ export class Player {
       if (_enemysGrid[nearby] == 's') {
         this.lastAttackedShip = nearby
         this.nearbyArea = [1, -1, 10, -10]
+        this.DoNotHitHere(nearby, false, _enemysGrid)
       }
     }
     return nearby
@@ -409,49 +398,72 @@ export class Player {
     }
     return false
   }
-  DoNotHitHere(_enemysGrid, _pos) {
+  DoNotHitHere(_pos, _toCheck, _enemysGrid) {
     console.log("Function: DoNotHitHere, called")
-    let corner = [-11, -9, 9, 11]
-    //remove uneccessary controll
-    //LEFT
-    if (_pos % 10 == 0) {
-      for (let i = 0; i < corner.length; i++) {
-        if (corner[i] == -11 || corner[i] == 9)
-          corner.splice(i, 1)
+    if (!_toCheck) {
+      let corner = [-11, -9, 9, 11]
+      //remove uneccessary controlls
+      //LEFT
+      if (_pos % 10 == 0) {
+        for (let i = 0; i < corner.length; i++) {
+          if (corner[i] == -11 || corner[i] == 9) {
+            corner.splice(i, 1)
+            console.log("LEFT, Removing uneccessary controlls: " + corner[i])
+          }
+        }
       }
-    }
-    //RIGHT
-    if (_pos % 10 == 9) {
-      for (let i = 0; i < corner.length; i++) {
-        if (corner[i] == -9 || corner[i] == 11)
-          corner.splice(i, 1)
+      //RIGHT
+      if (_pos % 10 == 9) {
+        for (let i = 0; i < corner.length; i++) {
+          if (corner[i] == -9 || corner[i] == 11) {
+            corner.splice(i, 1)
+            console.log("RIGHT, Removing uneccessary controlls: " + corner[i])
+          }
+        }
       }
-    }
-    //TOP
-    if (_pos < 10) {
-      for (let i = 0; i < corner.length; i++) {
-        if (corner[i] == -11 || corner[i] == -9)
-          corner.splice(i, 1)
+      //TOP
+      if (_pos < 10) {
+        for (let i = 0; i < corner.length; i++) {
+          if (corner[i] == -11 || corner[i] == -9) {
+            corner.splice(i, 1)
+            console.log("TOP, Removing uneccessary controlls: " + corner[i])
+          }
+        }
       }
-    }
-    //BOTTOM
-    if (_pos > 89) {
-      for (let i = 0; i < corner.length; i++) {
-        if (corner[i] == 9 || corner[i] == 11)
-          corner.splice(i, 1)
+      //BOTTOM
+      if (_pos > 89) {
+        for (let i = 0; i < corner.length; i++) {
+          if (corner[i] == 9 || corner[i] == 11) {
+            corner.splice(i, 1)
+            console.log("BOTTOM, Removing uneccessary controlls: " + corner[i])
+          }
+        }
       }
-    }
-    for (let i = 0; i < _enemysGrid.length; i++) {
-      if (_enemysGrid[i] == 'h') {
-        for (let j = 0; j < corner.length; j++) {
-          if (_pos == i + corner[j]) {
-            console.log("This position doesn't need to be hitted: " + _pos)
-            return true
+      for (let i = 0; i < corner.length; i++) {
+        let cornerPos = corner[i] + _pos
+        if (cornerPos > -1 && cornerPos < 100) {
+          if (_enemysGrid[cornerPos] != 'm' || _enemysGrid[cornerPos] != 'h') {
+            let alreadyPresent = this.positionsNotToHit.find(element => element == cornerPos);
+            if (alreadyPresent == undefined) {
+              this.positionsNotToHit.push(cornerPos)
+              console.log("This position doesn't need to be hitted: " + cornerPos)
+            }
+            else {
+              console.log("There is already the value: " + alreadyPresent)
+            }
           }
         }
       }
     }
-    console.log("Alright, there is no problem to hit here: " + _pos)
-    return false
+    else {
+      for (let i = 0; i < this.positionsNotToHit.length; i++) {
+        if (_pos == this.positionsNotToHit[i]) {
+          console.log("This position is uneccessary to hit: " + _pos)
+          return true
+        }
+      }
+      console.log("There is no problem bro u can hit here: " + _pos)
+      return false
+    }
   }
 }
