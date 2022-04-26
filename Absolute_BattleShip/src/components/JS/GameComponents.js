@@ -34,10 +34,12 @@ export class Player {
   lastAttack;
   lastAttackedShip;
   nearbyArea;
+  positionsNotToHit;
   constructor(_name) {
     this.name = _name;
     this.sunkenShips = 0;
     this.nearbyArea = [1, -1, 10, -10]
+    this.positionsNotToHit = [];
     this.ships = [];
     this.grid = [
       // - nothing
@@ -308,7 +310,7 @@ export class Player {
       attck = Math.floor(Math.random() * 100)
       console.log("Attacking position: " + attck)
       console.log("Enemy's grid value: " + _enemysGrid[attck])
-      if (_enemysGrid[attck] == 'm' || _enemysGrid[attck] == 'h') {
+      if (_enemysGrid[attck] == 'm' || _enemysGrid[attck] == 'h' || this.DoNotHitHere(_enemysGrid, attck)) {
         console.log("Already attacked position: " + attck)
         isValid = false
       }
@@ -386,13 +388,13 @@ export class Player {
   }
   BorderAttackCheck(_posToAtt) {
     //BORDER RIGHT
-    if (this.lastAttackedShip % 10 == 9 && _posToAtt > this.lastAttackedShip) {
-      console.log("border right, it's bad to attack: " + _posToAtt + "when u are at: " + this.lastAttackedShip)
+    if (this.lastAttackedShip % 10 == 9 && _posToAtt % 10 == 0) {
+      console.log("border right, it's bad to attack: " + _posToAtt + " when u are at: " + this.lastAttackedShip)
       return true
     }
     //BORDER LEFT
-    if (this.lastAttackedShip % 10 == 0 && _posToAtt < this.lastAttackedShip) {
-      console.log("border left, it's bad to attack: " + _posToAtt + "when u are at: " + this.lastAttackedShip)
+    if (this.lastAttackedShip % 10 == 0 && _posToAtt % 10 == 9) {
+      console.log("border left, it's bad to attack: " + _posToAtt + " when u are at: " + this.lastAttackedShip)
       return true
     }
     console.log("No problem at: " + _posToAtt)
@@ -405,6 +407,51 @@ export class Player {
       if (posToControl > -1 && posToControl < 100 && _enemysGrid[posToControl] == 'h')
         return true
     }
+    return false
+  }
+  DoNotHitHere(_enemysGrid, _pos) {
+    console.log("Function: DoNotHitHere, called")
+    let corner = [-11, -9, 9, 11]
+    //remove uneccessary controll
+    //LEFT
+    if (_pos % 10 == 0) {
+      for (let i = 0; i < corner.length; i++) {
+        if (corner[i] == -11 || corner[i] == 9)
+          corner.splice(i, 1)
+      }
+    }
+    //RIGHT
+    if (_pos % 10 == 9) {
+      for (let i = 0; i < corner.length; i++) {
+        if (corner[i] == -9 || corner[i] == 11)
+          corner.splice(i, 1)
+      }
+    }
+    //TOP
+    if (_pos < 10) {
+      for (let i = 0; i < corner.length; i++) {
+        if (corner[i] == -11 || corner[i] == -9)
+          corner.splice(i, 1)
+      }
+    }
+    //BOTTOM
+    if (_pos > 89) {
+      for (let i = 0; i < corner.length; i++) {
+        if (corner[i] == 9 || corner[i] == 11)
+          corner.splice(i, 1)
+      }
+    }
+    for (let i = 0; i < _enemysGrid.length; i++) {
+      if (_enemysGrid[i] == 'h') {
+        for (let j = 0; j < corner.length; j++) {
+          if (_pos == i + corner[j]) {
+            console.log("This position doesn't need to be hitted: " + _pos)
+            return true
+          }
+        }
+      }
+    }
+    console.log("Alright, there is no problem to hit here: " + _pos)
     return false
   }
 }
