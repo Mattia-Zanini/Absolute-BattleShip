@@ -32,17 +32,13 @@ export class Player {
   grid;
   sunkenShips;
   lastAttack;
-  positionToHit;
-  positionHitted;
+  lastAttackedShip;
+  nearbyArea;
   positionsNotToHit;
   constructor(_name) {
     this.name = _name;
     this.sunkenShips = 0;
-    this.positionToHit = [];
-    for (let i = 0; i < 100; i++) {
-      this.positionToHit.push(i);
-    }
-    this.positionHitted = [];
+    this.nearbyArea = [1, -1, 10, -10]
     this.positionsNotToHit = [];
     this.ships = [];
     this.grid = [
@@ -294,6 +290,73 @@ export class Player {
       return false
     }
   }
+  Attack(_enemysGrid) {
+    console.log("Enemy's grid:\n" + _enemysGrid)
+    if (this.lastAttack == undefined)
+      console.log("Last attack not registered yet")
+    else {
+      console.log("Last attack already registered with value: " + this.lastAttack)
+      console.log("Enemy grid in pos last attack is: " + _enemysGrid[this.lastAttack])
+    }
+    if (this.lastAttackedShip == undefined)
+      return this.RandomAttack(_enemysGrid);
+    return this.NearbyAttack(_enemysGrid)
+  }
+  RandomAttack(_enemysGrid) {
+    console.log("Random Attack")
+    let isValid = false
+    let attck
+    do {
+      attck = Math.floor(Math.random() * 100)
+      console.log("Attacking position: " + attck)
+      console.log("Enemy's grid value: " + _enemysGrid[attck])
+      if (_enemysGrid[attck] == 'm' || _enemysGrid[attck] == 'h' || this.DoNotHitHere(attck, true, _enemysGrid)) {
+        console.log("Already attacked position: " + attck)
+        isValid = false
+      }
+      else
+        isValid = true
+    } while (isValid == false)
+    //console.log("Saving lastAttack")
+    this.lastAttack = attck
+    if (_enemysGrid[attck] == 's') {
+      this.lastAttackedShip = attck
+    }
+    return attck
+  }
+  NearbyAttack(_enemysGrid) {
+    console.log("Nearby Attack")
+    let nearby
+    console.log("Deleting uneccessary pos, start value: " + this.nearbyArea.length)
+    for (let i = 0; i < this.nearbyArea.length; i++) {
+      let nerb = this.nearbyArea[i] + this.lastAttackedShip
+      if (nerb < 0 || nerb > 99 || _enemysGrid[nerb] == 'm' || _enemysGrid[nerb] == 'h' || this.BorderAttackCheck(nerb) || this.DoNotHitHere(nerb, true, _enemysGrid)) {
+        this.nearbyArea.splice(i, 1)
+        i--
+      }
+    }
+    console.log("End value: " + this.nearbyArea.length)
+    if (this.nearbyArea.length == 0) {
+      this.nearbyArea = [1, -1, 10, -10]
+      this.lastAttackedShip = undefined
+      nearby = this.RandomAttack(_enemysGrid);
+      console.log("Random Attack with no nearby cell to check")
+    }
+    else {
+      let rand = Math.floor(Math.random() * this.nearbyArea.length)
+      nearby = this.nearbyArea[rand] + this.lastAttackedShip
+      console.log("Rand value: " + rand)
+      console.log("Value extracted: " + this.nearbyArea[rand])
+      console.log("Nearby cell is: " + nearby)
+      this.nearbyArea.splice(rand, 1)
+      this.lastAttack = nearby
+      if (_enemysGrid[nearby] == 's') {
+        this.lastAttackedShip = nearby
+        this.nearbyArea = [1, -1, 10, -10]
+      }
+    }
+    return nearby
+  }
   CheckSunkenShips(_hit) {
     console.log("Checking sunken ships")
     for (let i = 0; i < this.NumberOfShips; i++) {
@@ -310,29 +373,94 @@ export class Player {
       }
     }
   }
-  Attack(_enemysGrid) {
-    if (this.lastAttack == undefined)
-      console.log("Last attack not registered yet")
-    else {
-      console.log("Last attack already registered with value: " + this.lastAttack)
-      console.log("Enemy grid in pos last attack is: " + _enemysGrid[this.lastAttack])
+  BorderAttackCheck(_posToAtt) {
+    //BORDER RIGHT
+    if (this.lastAttackedShip % 10 == 9 && _posToAtt % 10 == 0) {
+      console.log("border right, it's bad to attack: " + _posToAtt + " when u are at: " + this.lastAttackedShip)
+      return true
     }
-    return this.RandomAttack(_enemysGrid);
+    //BORDER LEFT
+    if (this.lastAttackedShip % 10 == 0 && _posToAtt % 10 == 9) {
+      console.log("border left, it's bad to attack: " + _posToAtt + " when u are at: " + this.lastAttackedShip)
+      return true
+    }
+    console.log("No problem at: " + _posToAtt)
+    return false
   }
-  RandomAttack(_enemysGrid) {
-    console.log("Random Attack")
-    let attck
-    let randIndex = Math.floor(Math.random() * this.positionToHit.length)
-    attck = this.positionToHit[randIndex]
-    this.positionToHit.splice(randIndex, 1)
-    console.log("Removed: " + attck + " from position to hit")
-    this.positionHitted.push(attck)
-    console.log("Added: " + this.positionHitted[this.positionHitted.length - 1] + " from position hitted")
-    console.log("Attacking position: " + attck)
-    console.log("Enemy's grid value: " + _enemysGrid[attck])
-    console.log("Saving latest attack")
-    this.lastAttack = attck
-    console.log(this.positionToHit)
-    return attck
+  HittedShipsNearby(_enemysGrid, _pos) {
+    let check = [-1, 1, 10, -10]
+    for (let i = 0; i < check.length; i++) {
+      let posToControl = _pos + check[i]
+      if (posToControl > -1 && posToControl < 100 && _enemysGrid[posToControl] == 'h')
+        return true
+    }
+    return false
+  }
+  DoNotHitHere(_pos, _toCheck, _enemysGrid) {
+    if (!_toCheck) {
+      let corner = [-11, -9, 9, 11]
+      //remove uneccessary controlls
+      //LEFT
+      if (_pos % 10 == 0) {
+        for (let i = 0; i < corner.length; i++) {
+          if (corner[i] == -11 || corner[i] == 9) {
+            corner.splice(i, 1)
+            console.log("LEFT, Removing uneccessary controlls: " + corner[i])
+          }
+        }
+      }
+      //RIGHT
+      if (_pos % 10 == 9) {
+        for (let i = 0; i < corner.length; i++) {
+          if (corner[i] == -9 || corner[i] == 11) {
+            corner.splice(i, 1)
+            console.log("RIGHT, Removing uneccessary controlls: " + corner[i])
+          }
+        }
+      }
+      //TOP
+      if (_pos < 10) {
+        for (let i = 0; i < corner.length; i++) {
+          if (corner[i] == -11 || corner[i] == -9) {
+            corner.splice(i, 1)
+            console.log("TOP, Removing uneccessary controlls: " + corner[i])
+          }
+        }
+      }
+      //BOTTOM
+      if (_pos > 89) {
+        for (let i = 0; i < corner.length; i++) {
+          if (corner[i] == 9 || corner[i] == 11) {
+            corner.splice(i, 1)
+            console.log("BOTTOM, Removing uneccessary controlls: " + corner[i])
+          }
+        }
+      }
+      for (let i = 0; i < corner.length; i++) {
+        let cornerPos = corner[i] + _pos
+        if (cornerPos > -1 && cornerPos < 100) {
+          if (_enemysGrid[cornerPos] != 'm' || _enemysGrid[cornerPos] != 'h') {
+            let alreadyPresent = this.positionsNotToHit.find(element => element == cornerPos);
+            if (alreadyPresent == undefined) {
+              this.positionsNotToHit.push(cornerPos)
+              console.log("This position doesn't need to be hitted: " + cornerPos)
+            }
+            else {
+              console.log("There is already the value: " + alreadyPresent)
+            }
+          }
+        }
+      }
+    }
+    else {
+      for (let i = 0; i < this.positionsNotToHit.length; i++) {
+        if (_pos == this.positionsNotToHit[i]) {
+          console.log("This position is uneccessary to hit: " + _pos)
+          return true
+        }
+      }
+      console.log("There is no problem bro u can hit here: " + _pos)
+      return false
+    }
   }
 }

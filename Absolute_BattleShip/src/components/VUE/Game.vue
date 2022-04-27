@@ -118,7 +118,6 @@ export default {
         BotAttack() {
             let botStrikes = 0
             while (this.turn == false) {
-                this.bot.DoNotHitHere(this.bot.lastAttackedShip, false, this.player.grid)
                 if (!this.CheckHit(false, this.bot.Attack(this.player.grid))) {
 
                     let botMissedCell = document.getElementsByClassName('player')[this.bot.lastAttack]
@@ -152,42 +151,6 @@ export default {
                 }
             }
         },
-        /*TestPlayerAttack() {
-            let playerStrikes = 0
-            while (this.turn == true) {
-                if (!this.CheckHit(true, this.player.Attack(this.bot.grid))) {
-
-                    let playerMissedCell = document.getElementsByClassName('bot')[this.player.lastAttack]
-                    playerMissedCell.classList.add('attacked');
-                    //console.log(playerMissedCell)
-                    let playerMissedImg = document.createElement("img");
-                    playerMissedImg.setAttribute("draggable", false);
-                    playerMissedImg.src = "./src/assets/images/attackedCell.png"
-                    playerMissedImg.classList.add('hitedCell')
-                    playerMissedCell.appendChild(playerMissedImg);
-
-                    //console.log(this.player.grid)
-
-                    this.turn = false
-                    console.log("Player's strikes: " + playerStrikes)
-                    console.log("BOT'S TURN")
-                }
-                else {
-                    playerStrikes++
-                    let playerHitedCell = document.getElementsByClassName('bot')[this.player.lastAttack]
-                    playerHitedCell.classList.add('attacked');
-                    //console.log(playerHitedCell)
-                    let playerHitImg = document.createElement("img");
-                    playerHitImg.setAttribute("draggable", false);
-                    playerHitImg.src = "./src/assets/images/hitedShip.png"
-                    playerHitImg.classList.add('hitedCell')
-                    playerHitImg.classList.add('hitedShip')
-                    playerHitedCell.appendChild(playerHitImg)
-
-                    this.bot.CheckSunkenShips(this.player.lastAttack);
-                }
-            }
-        },*/
         CheckHit(_isPlayer, _hit) {
             if (_isPlayer) {
                 console.log("Checking player's hit")
