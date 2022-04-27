@@ -118,16 +118,17 @@ export default {
         BotAttack() {
             let botStrikes = 0
             while (this.turn == false) {
+                this.bot.DoNotHitHere(this.bot.lastAttackedShip, false, this.player.grid)
                 if (!this.CheckHit(false, this.bot.Attack(this.player.grid))) {
 
-                    let playerMissedCell = document.getElementsByClassName('player')[this.bot.lastAttack]
-                    playerMissedCell.classList.add('attacked');
-                    //console.log(playerMissedCell)
-                    let playerMissedImg = document.createElement("img");
-                    playerMissedImg.setAttribute("draggable", false);
-                    playerMissedImg.src = "./src/assets/images/attackedCell.png"
-                    playerMissedImg.classList.add('hitedCell')
-                    playerMissedCell.appendChild(playerMissedImg);
+                    let botMissedCell = document.getElementsByClassName('player')[this.bot.lastAttack]
+                    botMissedCell.classList.add('attacked');
+                    //console.log(botMissedCell)
+                    let botMissedImg = document.createElement("img");
+                    botMissedImg.setAttribute("draggable", false);
+                    botMissedImg.src = "./src/assets/images/attackedCell.png"
+                    botMissedImg.classList.add('hitedCell')
+                    botMissedCell.appendChild(botMissedImg);
 
                     //console.log(this.player.grid)
 
@@ -137,15 +138,15 @@ export default {
                 }
                 else {
                     botStrikes++
-                    let playerHitedCell = document.getElementsByClassName('player')[this.bot.lastAttack]
-                    playerHitedCell.classList.add('attacked');
-                    //console.log(playerHitedCell)
-                    let playerHitImg = document.createElement("img");
-                    playerHitImg.setAttribute("draggable", false);
-                    playerHitImg.src = "./src/assets/images/hitedShip.png"
-                    playerHitImg.classList.add('hitedCell')
-                    playerHitImg.classList.add('hitedShip')
-                    playerHitedCell.appendChild(playerHitImg)
+                    let botHitedCell = document.getElementsByClassName('player')[this.bot.lastAttack]
+                    botHitedCell.classList.add('attacked');
+                    //console.log(botHitedCell)
+                    let botHitImg = document.createElement("img");
+                    botHitImg.setAttribute("draggable", false);
+                    botHitImg.src = "./src/assets/images/hitedShip.png"
+                    botHitImg.classList.add('hitedCell')
+                    botHitImg.classList.add('hitedShip')
+                    botHitedCell.appendChild(botHitImg)
 
                     this.player.CheckSunkenShips(this.bot.lastAttack);
                 }

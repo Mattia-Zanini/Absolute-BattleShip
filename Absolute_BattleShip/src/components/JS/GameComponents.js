@@ -321,7 +321,6 @@ export class Player {
     this.lastAttack = attck
     if (_enemysGrid[attck] == 's') {
       this.lastAttackedShip = attck
-      this.DoNotHitHere(attck, false, _enemysGrid)
     }
     return attck
   }
@@ -354,7 +353,6 @@ export class Player {
       if (_enemysGrid[nearby] == 's') {
         this.lastAttackedShip = nearby
         this.nearbyArea = [1, -1, 10, -10]
-        this.DoNotHitHere(nearby, false, _enemysGrid)
       }
     }
     return nearby
@@ -399,7 +397,6 @@ export class Player {
     return false
   }
   DoNotHitHere(_pos, _toCheck, _enemysGrid) {
-    console.log("Function: DoNotHitHere, called")
     if (!_toCheck) {
       let corner = [-11, -9, 9, 11]
       //remove uneccessary controlls
