@@ -34,16 +34,22 @@ export class Player {
   lastAttack;
   positionToHit;
   positionHitted;
+  positionShipHitted;
   positionsNotToHit;
+  nextsAttack;
+  randomAttacks;
   constructor(_name) {
     this.name = _name;
     this.sunkenShips = 0;
+    this.randomAttacks = true;
     this.positionToHit = [];
     for (let i = 0; i < 100; i++) {
       this.positionToHit.push(i);
     }
+    this.positionShipHitted = [];
     this.positionHitted = [];
     this.positionsNotToHit = [];
+    this.nextsAttack = [];
     this.ships = [];
     this.grid = [
       // - nothing
@@ -82,6 +88,15 @@ export class Player {
     for (let i = 0; i < this.NumberOfShips; i++) {
       this.ships[i].ResetShip();
     }
+    this.randomAttacks = true;
+    this.positionToHit = [];
+    for (let i = 0; i < 100; i++) {
+      this.positionToHit.push(i);
+    }
+    this.positionShipHitted = [];
+    this.positionHitted = [];
+    this.positionsNotToHit = [];
+    this.nextsAttack = [];
     //console.log(this.grid);
   }
   RandomStart() {
@@ -317,22 +332,125 @@ export class Player {
       console.log("Last attack already registered with value: " + this.lastAttack)
       console.log("Enemy grid in pos last attack is: " + _enemysGrid[this.lastAttack])
     }
-    return this.RandomAttack(_enemysGrid);
+    if (this.randomAttacks) {
+      return this.RandomAttack(_enemysGrid);
+    }
+    else {
+      return this.SmartAttack(_enemysGrid);
+    }
   }
   RandomAttack(_enemysGrid) {
     console.log("Random Attack")
-    let attck
+    let randAttck
     let randIndex = Math.floor(Math.random() * this.positionToHit.length)
-    attck = this.positionToHit[randIndex]
+    randAttck = this.positionToHit[randIndex]
     this.positionToHit.splice(randIndex, 1)
-    console.log("Removed: " + attck + " from position to hit")
-    this.positionHitted.push(attck)
-    console.log("Added: " + this.positionHitted[this.positionHitted.length - 1] + " from position hitted")
-    console.log("Attacking position: " + attck)
-    console.log("Enemy's grid value: " + _enemysGrid[attck])
+    console.log("Removed: " + randAttck + " from position to hit")
+    this.positionHitted.push(randAttck)
+    console.log("Added: " + this.positionHitted[this.positionHitted.length - 1] + " to position hitted")
+    console.log("Attacking position: " + randAttck)
+    console.log("Enemy's grid value: " + _enemysGrid[randAttck])
     console.log("Saving latest attack")
-    this.lastAttack = attck
+    this.lastAttack = randAttck
     console.log(this.positionToHit)
-    return attck
+    if (_enemysGrid[randAttck] == 's') {
+      console.log("RANDOM Bot have hitted a player's ship at: " + randAttck)
+      this.positionShipHitted.push(randAttck)
+      this.randomAttacks = false
+
+      let corner = [-11, -9, 9, 11]
+      this.RemoveUnecessaryControlls(corner, randAttck)
+      for (let i = 0; i < this.positionToHit.length; i++) {
+        for (let j = 0; j < corner.length; j++) {
+          let checkPosToRemove = randAttck + corner[j]
+          if (this.positionToHit[i] == checkPosToRemove) {
+            let removedCorner = this.positionToHit.splice(i, 1)
+            console.log("Removed: " + removedCorner + " from position to hit")
+            this.positionsNotToHit.push(removedCorner)
+          }
+        }
+      }
+      console.log(this.positionToHit)
+    }
+    return randAttck
+  }
+  SmartAttack(_enemysGrid) {
+    console.log("Smart Attack")
+    let nearbyArea = [-10, -1, 1, 10]
+    let smartAttck; let isValid = false
+    let latestShipHitted = parseInt(this.positionShipHitted.slice(-1))  //.slice(-1) return the last element of the array
+    this.RemoveUnecessaryControlls(nearbyArea, latestShipHitted)
+    if (nearbyArea.length > 0) {
+      let randPos
+      do {
+        randPos = Math.floor(Math.random() * nearbyArea.length)
+        console.log("Random smart near position: " + nearbyArea[randPos])
+        //check if there is the position
+        for (let i = 0; i < this.positionToHit.length; i++) {
+          if (this.positionToHit[i] == latestShipHitted + nearbyArea[randPos]) {
+            smartAttck = this.positionToHit[i]
+            console.log("Position that there is maybe a ship: " + smartAttck)
+            this.positionToHit.splice(i, 1)
+            isValid = true
+            break
+          }
+        }
+        nearbyArea.splice(randPos, 1)
+
+        if (nearbyArea.length == 0) {
+          console.log("No more positions in the nearby to check")
+          break
+        }
+      } while (!isValid)
+    }
+    if (nearbyArea.length == 0 && !isValid) {
+      console.log("No nearby area to attack")
+      smartAttck = this.RandomAttack(_enemysGrid)
+      this.randomAttacks = true
+    }
+    if (_enemysGrid[smartAttck] == 's') {
+      console.log("SMART Bot have hitted a player's ship at: " + smartAttck)
+      this.positionShipHitted.push(smartAttck)
+
+      let corner = [-11, -9, 9, 11]
+      this.RemoveUnecessaryControlls(corner, smartAttck)
+      for (let i = 0; i < this.positionToHit.length; i++) {
+        for (let j = 0; j < corner.length; j++) {
+          let checkPosToRemove = smartAttck + corner[j]
+          if (this.positionToHit[i] == checkPosToRemove) {
+            let removedCorner = this.positionToHit.splice(i, 1)
+            console.log("Removed: " + removedCorner + " from position to hit")
+            this.positionsNotToHit.push(removedCorner)
+          }
+        }
+      }
+      console.log(this.positionToHit)
+    }
+    this.lastAttack = smartAttck
+    return smartAttck
+  }
+  RemoveUnecessaryControlls(array, _pos) {
+    console.log("Removing unnecessary controls")
+    for (let i = 0; i < array.length; i++) {
+      let checkingPos = _pos + array[i]
+      console.log("Checking position: " + checkingPos + " with this array value: " + array[i])
+      //top & bottom
+      if (checkingPos < 0 || checkingPos > 99) {
+        array.splice(i, 1)
+        i--
+      }
+      //left
+      else if (_pos % 10 == 0 && checkingPos % 10 == 9) {
+        array.splice(i, 1)
+        i--
+      }
+      //right
+      else if (_pos % 10 == 9 && checkingPos % 10 == 0) {
+        array.splice(i, 1)
+        i--
+      }
+    }
+    console.log("Finished to remove the useless controlls")
+    console.log(array)
   }
 }
