@@ -379,7 +379,9 @@ export class Player {
     let nearbyArea = [-10, -1, 1, 10]
     let smartAttck; let isValid = false
     let latestShipHitted = parseInt(this.positionShipHitted.slice(-1))  //.slice(-1) return the last element of the array
+    console.log("1")
     this.RemoveUnecessaryControlls(nearbyArea, latestShipHitted)
+    console.log("2")
     if (nearbyArea.length > 0) {
       let randPos
       do {
@@ -403,11 +405,13 @@ export class Player {
         }
       } while (!isValid)
     }
+    console.log("3")
     if (nearbyArea.length == 0 && !isValid) {
       console.log("No nearby area to attack")
       smartAttck = this.RandomAttack(_enemysGrid)
       this.randomAttacks = true
     }
+    console.log("4")
     if (_enemysGrid[smartAttck] == 's') {
       console.log("SMART Bot have hitted a player's ship at: " + smartAttck)
       this.positionShipHitted.push(smartAttck)
