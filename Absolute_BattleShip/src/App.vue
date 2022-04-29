@@ -21,10 +21,10 @@ const winner = "";
       <Grid @exitPreGame="showMenu" :rowIndicators="rIndi" :player="player" @update-player="updatePlayer" />
     </div>
     <div v-if="show == 3" class="row d-flex justify-content-center zoomin">
-      <Game @exitGame="showMenu" :rowIndicators="rIndi" :bot="bot" :player="player" @gameFinished="Winner"/>
+      <Game @exitGame="showMenu" :rowIndicators="rIndi" :bot="bot" :player="player" @gameFinished="Winner" />
     </div>
     <div v-if="show == 4" class="row d-flex justify-content-center zoomin">
-      <End @exit="showMenu" :winn="winner"/>
+      <End @exit="showMenu" :winn="winner" />
     </div>
   </div>
 </template>
@@ -105,7 +105,7 @@ export default {
         }
       }
     },
-    Winner(_winnerName){
+    Winner(_winnerName) {
       this.winner = _winnerName;
     }
   },
